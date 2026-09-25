@@ -72,3 +72,24 @@ Problem / decision: Choose the regularisation strength C for the decision layer 
 Root cause / options considered: Per-model L2 normalisation, StandardScaler, multinomial logistic regression (lbfgs); C in {0.1, 1, 10}; class_weight none or balanced. ResNet-18 on validation: macro F1 0.871 to 0.881 over all six settings, accuracy 0.956 to 0.962. C = 1 is best for both weightings (0.8795 none, 0.8808 balanced).
 Resolution: C = 1 for ResNet-18, both weightings carried forward as the proposal requires. The same grid is rerun for every feature set. Balanced weights raise mean recall of classes with fewer than 60 validation images from 0.78 to 0.83 but lower their precision from 0.88 to 0.84; predicted/true count for N. spumigena rises from 1.09 to 1.18. This is the over-prediction effect RQ2 must quantify at sample level.
 Rejected alternatives (if a decision, not a bug) and why: Wider C grid (differences are below 0.01 macro F1 and each fit costs time on fused features).
+
+## 2026-09-26 — Pre-registered analysis plan before 2021 evaluation
+RQ: RQ1 to RQ3
+Problem / decision: Yuchen asked for autonomous overnight progress. Many choices (fusion candidates, T1 margin, signal selection, threshold search, comparison policies) had to be fixed without him, and without looking at 2021.
+Root cause / options considered: Decide each choice ad hoc while running; or write all rules first.
+Resolution: `docs/ANALYSIS_PLAN.md`, committed locally (4d7823b, 00:27) before any 2021 evaluation. Two points deviate from the wording of `02_proposal.md` and are listed for Yuchen: T1 is decided on val only (the proposal also mentions 2021 labelled images; the project rules forbid tuning on 2021), and the distance signal is kept in T3 regardless of its val AUROC because val contains no out-of-class particles.
+Rejected alternatives (if a decision, not a bug) and why: Waiting for confirmation of each choice (would idle the whole night).
+
+## 2026-09-26 — CC error decomposition (post hoc, descriptive)
+RQ: RQ2
+Problem / decision: After the first RQ2 result (ResNet-18), CC over-estimated all series with a false early onset. The pre-registered metrics show the size of the error but not its source.
+Root cause / options considered: Split the CC bias of each series into false positives from unclassifiable images, false positives from other known classes, and false negatives.
+Resolution: Added `cc_error_decomposition.csv` to `run_abundance.py`. It is descriptive, changes no decision, and is marked as post hoc. ResNet-18, N-fixing total: +0.66 pp from unclassifiable, +0.17 pp from known classes, -0.03 pp missed.
+Rejected alternatives (if a decision, not a bug) and why: None.
+
+## 2026-09-26 — kNN on an 8 GB machine: swap thrashing
+RQ: n/a — infra/tooling
+Problem / decision: The first RQ3 run stalled (13% CPU, swap 9.5 of 10 GB used) while DINOv2 extraction and desktop apps held most of the memory.
+Root cause / options considered: Similarity chunks of 4,096 x 50,459 float32 (about 800 MB each) plus argpartition copies; and `pivot_table` counting called about 150 times in the review simulation.
+Resolution: Chunk size 512 (about 100 MB); vectorised counting with `np.bincount`.
+Rejected alternatives (if a decision, not a bug) and why: Approximate nearest neighbours (adds a dependency and changes the signal); running kNN on MPS (GPU busy with extraction).

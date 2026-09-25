@@ -84,3 +84,22 @@ def image_metrics(y_true, proba: np.ndarray, classes: np.ndarray, target_classes
         row = per_class[per_class["class"] == c]
         summary[f"f1_{c}"] = float(row.f1.iloc[0]) if len(row) else None
     return summary, per_class
+
+
+def softmax(logits: np.ndarray, T: float = 1.0) -> np.ndarray:
+    z = logits / T
+    z = z - z.max(axis=1, keepdims=True)
+    e = np.exp(z)
+    return e / e.sum(axis=1, keepdims=True)
+
+
+def fit_temperature(logits: np.ndarray, y_idx: np.ndarray) -> float:
+    """Temperature minimising the negative log-likelihood on held-out (validation) logits."""
+    from scipy.optimize import minimize_scalar
+
+    def nll(log_t):
+        p = softmax(logits, float(np.exp(log_t)))
+        return -np.mean(np.log(p[np.arange(len(y_idx)), y_idx] + 1e-12))
+
+    res = minimize_scalar(nll, bounds=(np.log(0.05), np.log(20.0)), method="bounded")
+    return float(np.exp(res.x))
