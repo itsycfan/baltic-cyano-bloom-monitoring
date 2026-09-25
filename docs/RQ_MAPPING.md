@@ -4,7 +4,7 @@
 
 | RQ | Status | Round / commit | Summary of latest result | Next action |
 |---|---|---|---|---|
-| RQ1 | TESTING | stage1 (features, split) | Four extractors verified on MPS (BioCLIP 2 = ViT-L/14, 768-D). ResNet-18 features extracted (0 corrupt). Index-adjacency check failed, so validation split is stratified random 80/20. | Finish DINOv2, CLIP, BioCLIP 2 extraction; train logistic regression; run T1 (fusion) and T2 (calibration). |
+| RQ1 | TESTING | stage1 (features, split) | Four extractors verified on MPS (BioCLIP 2 = ViT-L/14, 768-D). ResNet-18 features extracted (0 corrupt). Index-adjacency check failed, so validation split is stratified random 80/20. LR pipeline done; ResNet-18 val macro F1 0.880 (none) / 0.881 (balanced), C = 1. | Finish DINOv2, CLIP, BioCLIP 2 extraction; run the same LR grid; then T1 (fusion) and T2 (calibration). |
 | RQ2 | OPEN | stage0 | Ground truth ready: onset thresholds 1/2/5% fixed (June to September); *N. spumigena* evaluated as detection. | Waits for RQ1 classifier outputs. |
 | RQ3 | OPEN | | | Waits for RQ1 outputs and T3 signal validity. Report *N. spumigena* images routed by the high-risk rule. |
 
