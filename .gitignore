@@ -1,0 +1,21 @@
+# Data (tracked separately, kept local only)
+data/*
+!data/README.md
+
+# Environment
+.venv/
+venv/
+.env.local
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Office lock files
+~$*.docx
+~$*.pptx
+~$*.xlsx

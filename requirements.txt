@@ -1,0 +1,1 @@
+# Pin as the project grows. Kept empty on purpose — this template is stack-agnostic.
