@@ -1,0 +1,5 @@
+{
+  "method": "stratified random by class",
+  "val_fraction": 0.2,
+  "seed": 0
+}

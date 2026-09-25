@@ -1,1 +1,10 @@
-# Pin as the project grows. Kept empty on purpose — this template is stack-agnostic.
+# Python 3.11 (Homebrew), Apple Silicon MPS. Create with: python3.11 -m venv .venv
+torch==2.14.0
+torchvision==0.29.0
+timm==1.0.30
+open_clip_torch==3.3.0
+scikit-learn==1.9.1
+numpy==2.4.6
+pandas==3.0.6
+matplotlib==3.11.2
+pillow==12.3.0

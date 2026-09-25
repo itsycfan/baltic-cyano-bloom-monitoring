@@ -44,3 +44,24 @@ Problem / decision: In the 2021 main series N. spumigena has 5 images over 47 sa
 Root cause / options considered: Curve metrics on 0 to 2 images per sample are dominated by single errors. Onset thresholds on relative abundance are sensitive to small denominators.
 Resolution: N. spumigena stays a primary and high-risk target but is evaluated per sample as detection and count errors; flagged as a paper finding in RQ_MAPPING. Onset = first main-series sample from 1 June to 30 September reaching 1%, 2% or 5% of the N-fixing total; all three reported. Ground truth: 8 June, 29 June, 29 June. The window was added after seeing the ground-truth curve only (no predictions exist yet); it follows the project definition of recurrent summer blooms.
 Rejected alternatives (if a decision, not a bug) and why: A single threshold chosen after inspecting results (test-set tuning); onset without a season window (triggers on winter background).
+
+## 2026-09-26 — Environment: Python 3.11 venv
+RQ: n/a — infra/tooling
+Problem / decision: System Python is 3.9.6 (end of life) without timm or open_clip.
+Root cause / options considered: System 3.9 with user site-packages; Homebrew 3.11 in a project venv.
+Resolution: `.venv` from Homebrew Python 3.11; versions pinned in `requirements.txt`. All four backbones load on MPS: ResNet-18 (512-D), DINOv2 ViT-B/14 via torch.hub (768-D), CLIP ViT-B/16 openai via open_clip (512-D), BioCLIP 2 via open_clip `hf-hub:imageomics/bioclip-2` (ViT-L/14, 224 px, 768-D). Measured throughput with data loading: ResNet-18 about 200 img/s (I/O bound), DINOv2 about 25, CLIP about 30, BioCLIP 2 about 7 to 9 img/s.
+Rejected alternatives (if a decision, not a bug) and why: System Python 3.9, since newer library releases drop it.
+
+## 2026-09-26 — Preprocessing: pad to square instead of centre crop
+RQ: RQ1
+Problem / decision: The default CLIP and open_clip transform resizes the short side and centre crops. IFCB particles are often elongated: median aspect ratio 7.3 for Aphanizomenon, 6.1 for Oscillatoriales, 32% of all images above 2.
+Root cause / options considered: Centre crop (keeps resolution, discards most of a filament); pad to square then resize (keeps the whole particle, thin filaments become thinner).
+Resolution: Pad with the median border intensity, resize to 224 bicubic, replicate grey to RGB, apply each model's own mean and std. Same geometry for all four backbones so that differences come from the representation. Visual check in `experiments/stage1_rq1_representation/outputs/preprocessing_examples.png`.
+Rejected alternatives (if a decision, not a bug) and why: Centre crop, since it removes the shape cue that separates the filamentous targets. Appending absolute size as extra features: possible ablation, not planned now (scope).
+
+## 2026-09-26 — Validation split falls back to stratified random
+RQ: RQ1 (affects T1 to T4)
+Problem / decision: Plan (b) required training indices to follow acquisition order.
+Root cause / options considered: Cosine similarity of ResNet-18 features between images at index lag 1 to 1000 within each legacy name versus random same-class pairs. Train: excess 0.0002 at lag 1 (43% of 53 groups positive), flat at all lags. Positive control on 2021, sorted by sample: excess 0.0117, positive in 26 of 26 classes. The method detects sample structure; the training indices carry none.
+Resolution: Fallback (a) as agreed: per-class stratified random split, 80/20, seed 0 (`train_val_split.csv.gz`; 50,459 fit, 12,615 val; smallest val classes have 4 images). Leakage is reported as a limitation; within-sample images are only 0.014 cosine more similar than across samples on 2021 data, so the optimism of validation metrics should be modest.
+Rejected alternatives (if a decision, not a bug) and why: Index blocks (no evidence of order); clustering near-duplicates into pseudo-groups (extra complexity for a small expected gain, deferred).
