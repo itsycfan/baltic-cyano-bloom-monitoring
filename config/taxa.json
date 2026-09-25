@@ -1,0 +1,50 @@
+{
+  "primary_targets": [
+    "Aphanizomenon_flosaquae",
+    "Dolichospermum-Anabaenopsis",
+    "Dolichospermum-Anabaenopsis-coiled",
+    "Nodularia_spumigena"
+  ],
+  "reported_separately": [
+    "Oscillatoriales"
+  ],
+  "high_risk": [
+    "Nodularia_spumigena",
+    "Dinophysis_acuminata"
+  ],
+  "aggregates": {
+    "Dolichospermum_total": [
+      "Dolichospermum-Anabaenopsis",
+      "Dolichospermum-Anabaenopsis-coiled"
+    ],
+    "N_fixing_filamentous_total": [
+      "Aphanizomenon_flosaquae",
+      "Dolichospermum-Anabaenopsis",
+      "Dolichospermum-Anabaenopsis-coiled",
+      "Nodularia_spumigena"
+    ]
+  },
+  "display_names": {
+    "Aphanizomenon_flosaquae": "Aphanizomenon flosaquae",
+    "Dolichospermum-Anabaenopsis": "Dolichospermum/Anabaenopsis",
+    "Dolichospermum-Anabaenopsis-coiled": "Dolichospermum/Anabaenopsis coiled",
+    "Dolichospermum_total": "Dolichospermum/Anabaenopsis (all)",
+    "Nodularia_spumigena": "Nodularia spumigena",
+    "Oscillatoriales": "Oscillatoriales",
+    "Dinophysis_acuminata": "Dinophysis acuminata",
+    "N_fixing_filamentous_total": "N-fixing filamentous (total)"
+  },
+  "onset": {
+    "description": "Bloom onset = first main-series sample inside the search window whose relative abundance of the series reaches the threshold. Several thresholds are fixed a priori and all are reported (sensitivity analysis). The search window restricts onset to the summer bloom season (docs: recurrent summer blooms), because small winter samples produce a 1 to 3% background of Aphanizomenon.",
+    "series": "N_fixing_filamentous_total",
+    "thresholds": [
+      0.01,
+      0.02,
+      0.05
+    ],
+    "search_window": {
+      "start_month_day": "06-01",
+      "end_month_day": "09-30"
+    }
+  }
+}

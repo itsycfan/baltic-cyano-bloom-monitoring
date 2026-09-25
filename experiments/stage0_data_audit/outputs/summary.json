@@ -1,0 +1,144 @@
+{
+  "run_time_s": 42.5,
+  "limit_per_class": null,
+  "train": {
+    "n_images": 63074,
+    "n_classes": 50,
+    "n_images_pdf": 63074,
+    "classes_count_mismatch_vs_pdf": []
+  },
+  "test": {
+    "n_images": 151235,
+    "n_classified": 57207,
+    "n_unclassifiable": 94028,
+    "n_classes_present": 48,
+    "train_classes_absent_in_test": [
+      "Beads",
+      "Prorocentrum_cordatum"
+    ],
+    "test_classes_absent_in_train": [],
+    "n_samples": 59,
+    "n_weeks_with_samples": 47,
+    "weeks_missing": [
+      1,
+      2,
+      29,
+      41,
+      42
+    ],
+    "weeks_multiple": [
+      14,
+      15,
+      18,
+      31,
+      32
+    ],
+    "n_main_series_samples": 47,
+    "n_supplementary_samples": 11,
+    "incomplete_samples": [
+      {
+        "sample_id": "D20210720T120102_IFCB114",
+        "n_images": 50,
+        "particle_coverage": 0.0065
+      }
+    ],
+    "min_particle_coverage_complete": 0.9278,
+    "main_series_not_on_tuesday": [
+      "D20210419T021349_IFCB114",
+      "D20210503T105205_IFCB114",
+      "D20210519T120718_IFCB114"
+    ],
+    "smallest_samples": [
+      {
+        "sample_id": "D20210720T120102_IFCB114",
+        "n_images": 50
+      },
+      {
+        "sample_id": "D20211221T120159_IFCB114",
+        "n_images": 234
+      },
+      {
+        "sample_id": "D20211228T120520_IFCB114",
+        "n_images": 341
+      }
+    ]
+  },
+  "temporal_check": {
+    "test_time_min": "2021-01-19 12:07:54",
+    "test_time_max": "2021-12-28 12:05:20",
+    "test_all_in_year": true,
+    "train_images_with_ifcb_timestamp": 0,
+    "train_years_per_description": [
+      2016,
+      2017,
+      2018,
+      2019
+    ],
+    "train_test_identical_images": 0,
+    "train_duplicate_images_within": 0,
+    "test_duplicate_images_within": 0,
+    "note": "Training filenames carry no IFCB timestamp, so separation is verified from the dataset description (2016 to 2019) plus the absence of byte-identical images across sets."
+  },
+  "n_corrupt_images": 0,
+  "bloom_main_series": {
+    "N_fixing_filamentous_total": {
+      "peak_ra": 0.0932,
+      "peak_date": "2021-07-27",
+      "n_samples_present": 31
+    },
+    "Aphanizomenon_flosaquae": {
+      "peak_ra": 0.0855,
+      "peak_date": "2021-07-27",
+      "n_samples_present": 31
+    },
+    "Dolichospermum_total": {
+      "peak_ra": 0.0506,
+      "peak_date": "2021-06-29",
+      "n_samples_present": 11
+    },
+    "Nodularia_spumigena": {
+      "peak_ra": 0.0003,
+      "peak_date": "2021-08-24",
+      "n_samples_present": 4
+    },
+    "Oscillatoriales": {
+      "peak_ra": 0.1287,
+      "peak_date": "2021-08-17",
+      "n_samples_present": 10
+    },
+    "Dinophysis_acuminata": {
+      "peak_ra": 0.0018,
+      "peak_date": "2021-09-07",
+      "n_samples_present": 6
+    }
+  },
+  "ground_truth_onset_no_window": {
+    "1%": "2021-01-19",
+    "2%": "2021-01-26",
+    "5%": "2021-06-29"
+  },
+  "ground_truth_onset": {
+    "1%": {
+      "sample_id": "D20210608T115904_IFCB114",
+      "date": "2021-06-08",
+      "iso_week": 23
+    },
+    "2%": {
+      "sample_id": "D20210629T115912_IFCB114",
+      "date": "2021-06-29",
+      "iso_week": 26
+    },
+    "5%": {
+      "sample_id": "D20210629T115912_IFCB114",
+      "date": "2021-06-29",
+      "iso_week": 26
+    }
+  },
+  "nodularia_images": {
+    "main_series": 5,
+    "main_series_max_per_sample": 2,
+    "supplementary": 57,
+    "total_test": 62,
+    "train": 169
+  }
+}

@@ -19,3 +19,8 @@ Thumbs.db
 ~$*.docx
 ~$*.pptx
 ~$*.xlsx
+
+# Experiment artefacts
+features/
+checkpoints/
+**/outputs/smoke/

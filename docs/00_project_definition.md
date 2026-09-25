@@ -20,6 +20,7 @@ Both datasets were released by the Finnish Environment Institute (SYKE). Images 
 
 - **SYKE-plankton_IFCB_2022 (training):** about 63,000 images. Sources are continuous deployment at the Utö station in 2017 and 2018 (62 samples) and Alg@line ferrybox samples from 2016 and 2019 run in the laboratory (52 samples). Some file names retain earlier class names.
 - **SYKE-plankton_IFCB_Utö_2021 (testing):** continuous deployment at Utö from January to December 2021, with about one sample per week plus additional seasonal samples for rare classes. All images in each selected sample were verified or corrected, and images that could not be identified are stored in a separate unclassifiable folder. Sample composition is therefore complete. Reported sizes differ (about 140,000 images in the dataset description; about 57,000 classified and 94,000 unclassifiable in the repository record) and will be confirmed by counting.
+- **Main series:** the regular weekly samples form the main time series (one complete sample per ISO week, closest to Tuesday 12:00); supplementary samples chosen for rare classes are kept for sensitivity analysis only. See `02_proposal.md`, Stage 0.
 - **File names:** for example `D20210601T120001_IFCB114_01623.png`, giving the sample start time, the instrument (IFCB114) and the particle index. The first two fields form the sample ID.
 
 Training (2016 to 2019) and test (2021) data do not overlap in time, so the seasonal distribution shift is real rather than simulated.
@@ -67,8 +68,8 @@ Quantify the error of cyanobacteria relative abundance curves produced by frozen
 ### 4.5 Open Questions
 
 - Final set of target classes, to be confirmed against Kraft et al. (2021, 2022).
-- Definition of bloom onset, for example the first week in which relative abundance exceeds a threshold.
-- Whether the additional seasonal samples allow a clean series of one sample per week.
+- ~~Definition of bloom onset~~ Resolved in Stage 0: fixed thresholds of 1%, 2% and 5% within June to September (see `02_proposal.md`).
+- ~~Whether the additional seasonal samples allow a clean series of one sample per week~~ Resolved in Stage 0: 47 main-series samples, 5 weeks without a sample.
 - Whether feature fusion improves transfer, and whether classifier confidence remains calibrated under the temporal shift.
 
 ---
