@@ -7,8 +7,8 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 | Job | Started | Status |
 |---|---|---|
 | DINOv2 feature extraction | 00:05 | done about 02:35 (1.7 h test + 0.75 h train) |
-| CLIP feature extraction | 09:37 (queue bug, see DEV_LOG) | running, QuickGELU fixed |
-| BioCLIP 2 feature extraction | after CLIP (about 11:40) | queued, ETA about 19:00 |
+| CLIP feature extraction | 09:37 (queue bug, see DEV_LOG) | done 12:09; pipeline done 12:24 |
+| BioCLIP 2 feature extraction | 12:09 | running; final stage (fusions, T1, summaries) chained automatically |
 
 ## Checklist
 
@@ -21,7 +21,7 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 - [x] RQ3 scripts (kNN evidence, T3, T4, simulated review, baselines)
 - [x] Full pipeline on ResNet-18 (both class weights)
 - [x] DINOv2: LR grid + pipeline
-- [ ] CLIP: LR grid + pipeline
+- [x] CLIP: LR grid + pipeline
 - [ ] BioCLIP 2: LR grid + pipeline
 - [ ] T1 fusion candidates and decision
 - [ ] RQ2 and RQ3 on the primary feature set
@@ -43,6 +43,9 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 - 09:44 DINOv2 pipeline done (F13 to F15); ResNet-18 + DINOv2 fusion pipeline started.
 - 10:09 Fusion pipeline done (F16); notification arrived at 11:10.
 - 11:10 Post hoc no-distance policy diagnostic started (DINOv2, ResNet-18).
+- 11:12 Diagnostic done (F17).
+- 12:09 CLIP extracted; BioCLIP 2 started; final stage chained to its PID.
+- 12:24 CLIP pipeline done (F18 to F20).
 
 ## Findings to report
 
@@ -60,7 +63,11 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 - **F12 (exploratory, post hoc, corrects F2):** appending log width and log height to ResNet-18 features does not reduce absorption: unclassifiable images predicted as *Pyramimonas* rise from 58,134 to 60,528, the share predicted as N-fixing taxa moves only from 0.95% to 0.90%, and CC N-fixing MAE from 0.80 to 0.77 pp (onset still 4 weeks early). Unclassifiable particles are small (median 72 x 42 px), like small flagellates, so size does not separate them. The cause is the closed-set design itself (no class for other particles), not the preprocessing.
 - **F13 (RQ1, DINOv2 vs ResNet-18):** DINOv2 is better on every image-level measure: val macro F1 0.945 vs 0.880, 2021 macro F1 0.705 vs 0.623, 2021 ECE after scaling 0.032 vs 0.058, and it absorbs fewer unclassifiable images into N-fixing taxa (0.5% vs 0.9%). Balanced weights with T = 0.95 make 2021 calibration slightly worse after scaling (0.031 to 0.037): val-fitted temperature does not always transfer.
 - **F14 (RQ2):** better features reduce abundance error roughly in proportion: CC N-fixing MAE 0.80 (ResNet-18) to 0.42 pp (DINOv2); with balanced weights 0.21 pp, and all three onsets (1, 2, 5%) are then correct without any review. Unclassifiable absorption remains the largest error source (0.30 of 0.42 pp bias).
-- **F15 (RQ3, T3):** the NN distance signal is near chance for DINOv2 (val AUROC 0.53; 2021 unclassifiable vs correct 0.56), weaker than for ResNet-18 (0.72; 0.71). It was kept only by the pre-registered exception. Realised review rates are higher with DINOv2 (nominal 10% becomes 45.8%). A post hoc check of the policy without the distance signal is planned.
+- **F15 (RQ3, T3):** the NN distance signal is near chance for DINOv2 (val AUROC 0.53; 2021 unclassifiable vs correct 0.56), weaker than for ResNet-18 (0.72; 0.71). It was kept only by the pre-registered exception. Realised review rates are higher with DINOv2 (nominal 10% becomes 45.8%). See F17.
 - **F16 (T1, interim, two backbones):** ResNet-18 + DINOv2 reaches val macro F1 0.947 vs 0.945 for DINOv2 alone (+0.002, below the +0.01 rule): not adopted. On 2021 it is equal (0.704 vs 0.705) and slightly better for abundance (balanced CC N-fixing MAE 0.175 vs 0.208 pp); the rule is not changed for that. Final T1 waits for CLIP and BioCLIP 2.
+- **F17 (post hoc diagnostic, supports the pre-registered choice):** dropping the distance signal does not reduce workload; it raises it (DINOv2 nominal 10%: realised 45.8% to 55.5%; ResNet-18: 37.7% to 48.1%), because alpha is recalibrated on val and the remaining signals, which inflate more under shift, take a larger share. At matched workload DINOv2 is unchanged and ResNet-18 is worse without distance (30.2% review: 0.226 pp vs 21.8% review: 0.215 pp with distance). Keeping the distance signal was harmless for DINOv2 and useful for ResNet-18.
+- **F18 (RQ1 vs RQ2, key):** image-level ranking does not predict abundance ranking. CLIP beats ResNet-18 on 2021 macro F1 (0.659 vs 0.623) but has the largest abundance error (CC N-fixing MAE 1.03 vs 0.80 pp) because it absorbs the most unclassifiable particles into N-fixing taxa (1.1% vs 0.9%). Model selection by accuracy can pick a worse monitoring model.
+- **F19 (T2):** CLIP is the best calibrated on 2021 before scaling (ECE 0.019); the val-fitted T = 0.93 makes it worse (0.028). Across backbones, val temperature helps when T > 1 (ResNet-18, DINOv2 none) and hurts when T < 1.
+- **F20 (RQ3, limit of the high-risk rule):** with CLIP at nominal 1%, one true N. spumigena image is missed after review: it was predicted as another class and triggered no rule. The high-risk rule removes false detections but cannot recover missed ones; missed detections depend on the other signals.
 
 ## Needs Yuchen's decision

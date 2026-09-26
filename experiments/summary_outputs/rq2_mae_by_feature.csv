@@ -1,4 +1,8 @@
 features,series,mae_balanced_ACC,mae_balanced_CC,mae_none_ACC,mae_none_CC
+clip_vitb16,Aphanizomenon_flosaquae,0.0959,0.1154,0.1803,0.2252
+clip_vitb16,Dolichospermum_total,0.2146,0.2245,0.7709,0.82
+clip_vitb16,N_fixing_filamentous_total,0.3206,0.3541,0.9269,1.0274
+clip_vitb16,Oscillatoriales,0.1167,0.1204,0.2284,0.2472
 dinov2_vitb14,Aphanizomenon_flosaquae,0.0886,0.0919,0.1987,0.2032
 dinov2_vitb14,Dolichospermum_total,0.1092,0.1236,0.1961,0.226
 dinov2_vitb14,N_fixing_filamentous_total,0.1904,0.2084,0.3846,0.4161

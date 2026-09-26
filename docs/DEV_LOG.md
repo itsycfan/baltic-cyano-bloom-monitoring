@@ -114,3 +114,10 @@ Problem / decision: At the CLIP restart open_clip warned: "QuickGELU mismatch be
 Root cause / options considered: OpenAI CLIP weights were trained with QuickGELU; the default `ViT-B-16` config uses GELU, which silently degrades the features.
 Resolution: `force_quick_gelu=True` in `src/features.py`; verified the MLP activation is QuickGELU and the warning is gone. No CLIP features had been extracted with the wrong setting (only the smoke test, since deleted). BioCLIP 2's own config has no QuickGELU flag and loads without the warning. Lesson: do not filter warnings in smoke tests.
 Rejected alternatives (if a decision, not a bug) and why: None.
+
+## 2026-09-26 — Post hoc check: triage policy without the distance signal
+RQ: RQ3
+Problem / decision: With DINOv2 the NN-distance signal is near chance (val AUROC 0.53) but was kept by the pre-registered exception. Question: does it only add workload?
+Root cause / options considered: Rerun the policy with `--exclude-signal nn_distance` (separate output folders, marked post hoc) for DINOv2 and ResNet-18, class weight none.
+Resolution: Workload rises without it (nominal 10%: DINOv2 45.8% to 55.5%, ResNet-18 37.7% to 48.1%), since the shared alpha loosens the thresholds of the remaining signals. At matched workload DINOv2 is unchanged and ResNet-18 is worse. The pre-registered policy is kept.
+Rejected alternatives (if a decision, not a bug) and why: Replacing the primary policy post hoc (not justified by the evidence, and would break the pre-registration).
