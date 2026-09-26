@@ -25,7 +25,7 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 - [ ] BioCLIP 2: LR grid + pipeline
 - [ ] T1 fusion candidates and decision
 - [ ] RQ2 and RQ3 on the primary feature set
-- [ ] Summary report
+- [ ] Summary report (draft in docs/PROJECT_REPORT.md, BioCLIP 2 pending)
 
 ## Log
 
@@ -46,6 +46,7 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 - 11:12 Diagnostic done (F17).
 - 12:09 CLIP extracted; BioCLIP 2 started; final stage chained to its PID.
 - 12:24 CLIP pipeline done (F18 to F20).
+- 12:27 Report draft written and every number checked against the output files (F21).
 
 ## Findings to report
 
@@ -69,5 +70,6 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 - **F18 (RQ1 vs RQ2, key):** image-level ranking does not predict abundance ranking. CLIP beats ResNet-18 on 2021 macro F1 (0.659 vs 0.623) but has the largest abundance error (CC N-fixing MAE 1.03 vs 0.80 pp) because it absorbs the most unclassifiable particles into N-fixing taxa (1.1% vs 0.9%). Model selection by accuracy can pick a worse monitoring model.
 - **F19 (T2):** CLIP is the best calibrated on 2021 before scaling (ECE 0.019); the val-fitted T = 0.93 makes it worse (0.028). Across backbones, val temperature helps when T > 1 (ResNet-18, DINOv2 none) and hurts when T < 1.
 - **F20 (RQ3, limit of the high-risk rule):** with CLIP at nominal 1%, one true N. spumigena image is missed after review: it was predicted as another class and triggered no rule. The high-risk rule removes false detections but cannot recover missed ones; missed detections depend on the other signals.
+- **F21 (RQ3, qualifies F10):** triage beats confidence-only clearly with unweighted classifiers (all four feature sets), but with balanced weights the gap is small and not consistent (CLIP balanced at nominal 5%: 0.154 vs 0.142 pp; ResNet-18 + DINOv2 balanced: 0.054 vs 0.037). Across all 8 configurations, reviewing 2 to 7% of images beats ACC.
 
 ## Needs Yuchen's decision

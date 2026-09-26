@@ -1,0 +1,19 @@
+{
+  "singles_available": [
+    "resnet18",
+    "dinov2_vitb14",
+    "clip_vitb16"
+  ],
+  "best_single": "dinov2_vitb14",
+  "best_single_val_macro_f1": 0.9449504528354494,
+  "fusions": {
+    "resnet18+dinov2_vitb14": {
+      "val_macro_f1": 0.9469419819795124,
+      "gain_over_best_single": 0.0019915291440629757,
+      "adopted": false
+    }
+  },
+  "all_four_available": false,
+  "primary_feature_set": "dinov2_vitb14",
+  "rule": "fusion adopted if val macro F1 (class_weight none) >= best single + 0.01"
+}
