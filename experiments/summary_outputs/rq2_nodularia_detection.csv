@@ -1,0 +1,7 @@
+features,class_weight,method,n_samples,samples_true_present,tp_samples,fp_samples,fn_samples,true_images,pred_images,excess_images
+dinov2_vitb14,none,CC,47,4,4,12,0,5,30,25
+dinov2_vitb14,balanced,CC,47,4,4,12,0,5,27,22
+resnet18,none,CC,47,4,4,14,0,5,25,20
+resnet18,balanced,CC,47,4,4,16,0,5,23,18
+resnet18+dinov2_vitb14,none,CC,47,4,4,14,0,5,27,22
+resnet18+dinov2_vitb14,balanced,CC,47,4,4,13,0,5,20,15

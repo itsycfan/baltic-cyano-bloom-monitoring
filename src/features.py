@@ -67,7 +67,8 @@ def load_extractor(name: str, device: torch.device) -> Extractor:
         ext = Extractor(name, m, lambda m, x: m(x), Preprocess(IMAGENET_MEAN, IMAGENET_STD), 768)
     elif name == "clip_vitb16":
         import open_clip
-        m, _, _ = open_clip.create_model_and_transforms("ViT-B-16", pretrained="openai")
+        # OpenAI CLIP weights were trained with QuickGELU; the default ViT-B-16 config uses GELU
+        m, _, _ = open_clip.create_model_and_transforms("ViT-B-16", pretrained="openai", force_quick_gelu=True)
         ext = Extractor(name, m, lambda m, x: m.encode_image(x), Preprocess(CLIP_MEAN, CLIP_STD), 512)
     elif name == "bioclip2":
         import open_clip

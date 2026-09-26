@@ -1,0 +1,13 @@
+features,class_weight,method,all_complete,main
+dinov2_vitb14,balanced,ACC,0.2038,0.1904
+dinov2_vitb14,balanced,CC,0.2283,0.2084
+dinov2_vitb14,none,ACC,0.4426,0.3846
+dinov2_vitb14,none,CC,0.4852,0.4161
+resnet18,balanced,ACC,0.3909,0.3528
+resnet18,balanced,CC,0.4726,0.4242
+resnet18,none,ACC,0.7153,0.6968
+resnet18,none,CC,0.8456,0.8031
+resnet18+dinov2_vitb14,balanced,ACC,0.1983,0.1698
+resnet18+dinov2_vitb14,balanced,CC,0.208,0.175
+resnet18+dinov2_vitb14,none,ACC,0.4028,0.3664
+resnet18+dinov2_vitb14,none,CC,0.4424,0.4016

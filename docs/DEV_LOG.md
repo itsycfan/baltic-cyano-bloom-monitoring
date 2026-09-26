@@ -93,3 +93,24 @@ Problem / decision: The first RQ3 run stalled (13% CPU, swap 9.5 of 10 GB used) 
 Root cause / options considered: Similarity chunks of 4,096 x 50,459 float32 (about 800 MB each) plus argpartition copies; and `pivot_table` counting called about 150 times in the review simulation.
 Resolution: Chunk size 512 (about 100 MB); vectorised counting with `np.bincount`.
 Rejected alternatives (if a decision, not a bug) and why: Approximate nearest neighbours (adds a dependency and changes the signal); running kNN on MPS (GPU busy with extraction).
+
+## 2026-09-26 — Size hypothesis for closed-set absorption rejected (exploratory)
+RQ: RQ1 (explains RQ2 error source)
+Problem / decision: F2 attributed the absorption of unclassifiable particles into small-cell classes to pad-to-square resizing, which removes absolute size. This was an untested claim.
+Root cause / options considered: Test it by appending log width and log height to ResNet-18 features (same C and weighting).
+Resolution: Rejected. Absorption into Pyramimonas rises (58,134 to 60,528); share into N-fixing taxa 0.95% to 0.90%; CC N-fixing MAE 0.80 to 0.77 pp; val macro F1 0.880 to 0.875, 2021 macro F1 0.623 to 0.634. The primary pipeline keeps size-free features. The cause is the closed-set design. Script: `exploratory_size_ablation.py` (post hoc, exploratory).
+Rejected alternatives (if a decision, not a bug) and why: Adding size to the primary pipeline (no meaningful gain, and a post hoc change).
+
+## 2026-09-26 — Queued extraction never started (self-matching pgrep); 7 GPU hours lost
+RQ: n/a — infra/tooling
+Problem / decision: CLIP and BioCLIP 2 were queued to start after DINOv2 with `while pgrep -f 'model dinov2_vitb14'; do sleep 60; done`. DINOv2 finished around 02:35, but CLIP had not started by 09:35.
+Root cause / options considered: `pgrep -f` matches full command lines, and the waiting shell's own command line contains the pattern, so the loop matched itself forever. The same bug blocked the completion watcher.
+Resolution: Killed the loops; restarted with plain sequential commands in one shell (`extract clip; extract bioclip2`). Never wait on a pgrep pattern that appears in the waiting command itself; chain jobs sequentially or wait on a PID.
+Rejected alternatives (if a decision, not a bug) and why: None.
+
+## 2026-09-26 — OpenAI CLIP loaded with the wrong activation (QuickGELU)
+RQ: RQ1
+Problem / decision: At the CLIP restart open_clip warned: "QuickGELU mismatch between final model config (quick_gelu=False) and pretrained tag 'openai' (quick_gelu=True)". The smoke test output had filtered warnings, so this was missed on day 1.
+Root cause / options considered: OpenAI CLIP weights were trained with QuickGELU; the default `ViT-B-16` config uses GELU, which silently degrades the features.
+Resolution: `force_quick_gelu=True` in `src/features.py`; verified the MLP activation is QuickGELU and the warning is gone. No CLIP features had been extracted with the wrong setting (only the smoke test, since deleted). BioCLIP 2's own config has no QuickGELU flag and loads without the warning. Lesson: do not filter warnings in smoke tests.
+Rejected alternatives (if a decision, not a bug) and why: None.

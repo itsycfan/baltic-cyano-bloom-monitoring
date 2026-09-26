@@ -123,6 +123,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--features", required=True)
     ap.add_argument("--class-weight", default="none", choices=["none", "balanced"])
+    ap.add_argument("--exclude-signal", nargs="*", default=[], choices=list(SIGNALS),
+                    help="post hoc diagnostic: drop signals from the policy (outputs go to a separate folder)")
     args = ap.parse_args()
     feat, cw = args.features, args.class_weight
     taxa = load_json("taxa.json")
@@ -131,7 +133,7 @@ def main():
     window = (onset_cfg["search_window"]["start_month_day"], onset_cfg["search_window"]["end_month_day"])
     groups = {s: [s] for s in ["Aphanizomenon_flosaquae", "Oscillatoriales", NOD]}
     groups.update(taxa["aggregates"])
-    out = OUT_DIR / f"{feat}__{cw}"
+    out = OUT_DIR / (f"{feat}__{cw}" + "".join(f"__without_{e}" for e in args.exclude_signal))
     out.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(SEED)
 
@@ -158,7 +160,7 @@ def main():
     t3 = pd.DataFrame(t3)
     t3["kept"] = (t3.auroc_val_misclassified >= AUROC_KEEP) | (t3.signal == "nn_distance")
     t3.to_csv(out / "t3_signal_auroc.csv", index=False)
-    kept = t3.loc[t3.kept, "signal"].tolist()
+    kept = [k for k in t3.loc[t3.kept, "signal"] if k not in args.exclude_signal]
     print(t3.round(3).to_string(index=False), flush=True)
 
     # ---- T4: thresholds on val
@@ -237,7 +239,7 @@ def main():
     cr.to_csv(out / "review_curve_metrics.csv", index=False)
     pd.DataFrame(nod_rows).to_csv(out / "nodularia_routing.csv", index=False)
     with open(out / "config.json", "w") as f:
-        json.dump({"features": feat, "class_weight": cw, "k": K, "auroc_keep": AUROC_KEEP, "kept_signals": kept,
+        json.dump({"features": feat, "class_weight": cw, "excluded_post_hoc": args.exclude_signal, "k": K, "auroc_keep": AUROC_KEEP, "kept_signals": kept,
                    "high_risk": high_risk, "nominal_rates": NOMINAL_RATES, "random_draws": N_RANDOM_DRAWS,
                    "seed": SEED, "reference_set": "fit split", "thresholds_from": "2022 validation split"}, f, indent=2)
 

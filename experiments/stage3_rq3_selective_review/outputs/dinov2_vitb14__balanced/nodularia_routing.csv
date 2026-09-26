@@ -1,0 +1,8 @@
+nominal_rate,realised_rate_main,true_nod_images,true_nod_reviewed,true_nod_missed_after_review,pred_nod_images,pred_nod_false_before,pred_nod_false_after,fp_samples_after
+0.01,0.06297830197172954,5,5,0,27,22,0,0
+0.02,0.13016115962906274,5,5,0,27,22,0,0
+0.05,0.280246691275772,5,5,0,27,22,0,0
+0.1,0.4573782299450797,5,5,0,27,22,0,0
+0.2,0.66424777167552,5,5,0,27,22,0,0
+0.3,0.7693616638156118,5,5,0,27,22,0,0
+0.5,0.8923471684523273,5,5,0,27,22,0,0

@@ -1,0 +1,18 @@
+{
+  "features": [
+    "dinov2_vitb14"
+  ],
+  "C_grid": [
+    0.1,
+    1.0,
+    10.0
+  ],
+  "class_weights": [
+    "none",
+    "balanced"
+  ],
+  "limit": null,
+  "seed": 0,
+  "split": "stratified random 80/20",
+  "scaler": "StandardScaler after per-model L2 normalisation"
+}

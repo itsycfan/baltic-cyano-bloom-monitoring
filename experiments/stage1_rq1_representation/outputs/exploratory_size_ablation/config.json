@@ -1,0 +1,10 @@
+{
+  "status": "exploratory, post hoc",
+  "C": 1.0,
+  "class_weight": null,
+  "seed": 0,
+  "size_features": [
+    "log width",
+    "log height"
+  ]
+}
