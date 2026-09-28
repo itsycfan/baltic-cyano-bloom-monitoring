@@ -2,7 +2,8 @@
   "singles_available": [
     "resnet18",
     "dinov2_vitb14",
-    "clip_vitb16"
+    "clip_vitb16",
+    "bioclip2"
   ],
   "best_single": "dinov2_vitb14",
   "best_single_val_macro_f1": 0.9449504528354494,
@@ -11,9 +12,19 @@
       "val_macro_f1": 0.9469419819795124,
       "gain_over_best_single": 0.0019915291440629757,
       "adopted": false
+    },
+    "dinov2_vitb14+bioclip2": {
+      "val_macro_f1": 0.9503905867281808,
+      "gain_over_best_single": 0.005440133892731347,
+      "adopted": false
+    },
+    "resnet18+dinov2_vitb14+clip_vitb16+bioclip2": {
+      "val_macro_f1": 0.944377841734348,
+      "gain_over_best_single": -0.0005726111011014057,
+      "adopted": false
     }
   },
-  "all_four_available": false,
+  "all_four_available": true,
   "primary_feature_set": "dinov2_vitb14",
   "rule": "fusion adopted if val macro F1 (class_weight none) >= best single + 0.01"
 }

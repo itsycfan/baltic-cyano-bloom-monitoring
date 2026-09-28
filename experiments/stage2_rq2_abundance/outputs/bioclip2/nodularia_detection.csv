@@ -1,0 +1,3 @@
+features,class_weight,method,n_samples,samples_true_present,tp_samples,fp_samples,fn_samples,true_images,pred_images,excess_images
+bioclip2,none,CC,47,4,4,18,0,5,57,52
+bioclip2,balanced,CC,47,4,4,20,0,5,68,63

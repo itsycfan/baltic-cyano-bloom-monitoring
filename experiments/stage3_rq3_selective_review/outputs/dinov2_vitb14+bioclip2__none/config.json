@@ -1,0 +1,29 @@
+{
+  "features": "dinov2_vitb14+bioclip2",
+  "class_weight": "none",
+  "excluded_post_hoc": [],
+  "k": 7,
+  "auroc_keep": 0.6,
+  "kept_signals": [
+    "low_confidence",
+    "neighbour_disagreement",
+    "nn_distance"
+  ],
+  "high_risk": [
+    "Nodularia_spumigena",
+    "Dinophysis_acuminata"
+  ],
+  "nominal_rates": [
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.5
+  ],
+  "random_draws": 20,
+  "seed": 0,
+  "reference_set": "fit split",
+  "thresholds_from": "2022 validation split"
+}

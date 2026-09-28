@@ -8,7 +8,7 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 |---|---|---|
 | DINOv2 feature extraction | 00:05 | done about 02:35 (1.7 h test + 0.75 h train) |
 | CLIP feature extraction | 09:37 (queue bug, see DEV_LOG) | done 12:09; pipeline done 12:24 |
-| BioCLIP 2 feature extraction | 12:09 | running; final stage (fusions, T1, summaries) chained automatically |
+| BioCLIP 2 feature extraction | 26 Sep 12:09 | done about 21:10 (6.0 to 6.2 img/s); final stage done 22:13 |
 
 ## Checklist
 
@@ -22,10 +22,10 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 - [x] Full pipeline on ResNet-18 (both class weights)
 - [x] DINOv2: LR grid + pipeline
 - [x] CLIP: LR grid + pipeline
-- [ ] BioCLIP 2: LR grid + pipeline
-- [ ] T1 fusion candidates and decision
-- [ ] RQ2 and RQ3 on the primary feature set
-- [ ] Summary report (draft in docs/PROJECT_REPORT.md, BioCLIP 2 pending)
+- [x] BioCLIP 2: LR grid + pipeline
+- [x] T1 fusion candidates and decision (no fusion adopted; primary DINOv2)
+- [x] RQ2 and RQ3 on the primary feature set (and all others)
+- [x] Summary report (`docs/PROJECT_REPORT.md`)
 
 ## Log
 
@@ -47,6 +47,8 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 - 12:09 CLIP extracted; BioCLIP 2 started; final stage chained to its PID.
 - 12:24 CLIP pipeline done (F18 to F20).
 - 12:27 Report draft written and every number checked against the output files (F21).
+- 26 Sep 22:13 BioCLIP 2, DINOv2 + BioCLIP 2 and all-four pipelines, T1 decision and summaries done (automatic chain); completion notice reached the session on 28 Sep.
+- 28 Sep 22:05 Final numbers checked; report completed (F22 to F25).
 
 ## Findings to report
 
@@ -71,5 +73,11 @@ Working log for the autonomous session while Yuchen is offline. Local commits on
 - **F19 (T2):** CLIP is the best calibrated on 2021 before scaling (ECE 0.019); the val-fitted T = 0.93 makes it worse (0.028). Across backbones, val temperature helps when T > 1 (ResNet-18, DINOv2 none) and hurts when T < 1.
 - **F20 (RQ3, limit of the high-risk rule):** with CLIP at nominal 1%, one true N. spumigena image is missed after review: it was predicted as another class and triggered no rule. The high-risk rule removes false detections but cannot recover missed ones; missed detections depend on the other signals.
 - **F21 (RQ3, qualifies F10):** triage beats confidence-only clearly with unweighted classifiers (all four feature sets), but with balanced weights the gap is small and not consistent (CLIP balanced at nominal 5%: 0.154 vs 0.142 pp; ResNet-18 + DINOv2 balanced: 0.054 vs 0.037). Across all 8 configurations, reviewing 2 to 7% of images beats ACC.
+- **F22 (T1, final):** best single DINOv2 (val 0.945). Fusion gains on val: DINOv2 + BioCLIP 2 +0.005, all four -0.001, ResNet-18 + DINOv2 +0.002. None reaches +0.01; no fusion adopted; primary feature set DINOv2.
+- **F23 (key, validation vs shift):** the all-four fusion is fourth on val (0.944) but best on 2021 (0.755; drop 0.189 vs 0.22 to 0.26 for all others) and has the lowest abundance error (balanced CC MAE 0.154 pp). In-distribution validation cannot select the most shift-robust model. Not used to change the primary choice (that would be selection on the test set).
+- **F24 (BioCLIP 2):** ties DINOv2 on 2021 macro F1 (0.705) with the smallest drop among singles (0.226), the best transferring confidence signal (2021 AUROC 0.88), and near-perfect raw calibration (T = 1.00); but 40% more abundance error than DINOv2 (0.58 vs 0.42 pp) and the most false *N. spumigena* detections (18 to 20 of 43 absent samples, 52 to 63 excess images).
+- **F25 (robustness of earlier findings across all 14 configurations):** unclassifiable share of CC bias 70 to 85%; balanced weights reduce CC MAE by 44 to 66%; ACC by 1 to 17%; realised review at nominal 10% is 36 to 58%; nominal-1% triage beats ACC in 14 of 14; triage beats random in 42 of 42 configuration-rate pairs; high-risk rule removes all false *N. spumigena* images everywhere (0.05 to 0.11% of images); T > 1 always helps and T < 1 always hurts 2021 ECE.
 
 ## Needs Yuchen's decision
+
+See `docs/PROJECT_REPORT.md`, section 10.

@@ -76,8 +76,9 @@ def main():
     ax.set_xticks(x)
     ax.set_xticklabels([label(f) for f in order], rotation=20, ha="right", fontsize=7.5)
     ax.set_ylabel("Macro F1")
-    ax.set_ylim(0, 1)
-    ax.legend(frameon=False, loc="upper right")
+    ax.set_ylim(0, 1.12)
+    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.legend(frameon=False, loc="upper right", ncol=2)
     ax.set_title("Image-level macro F1 under the 2022 to 2021 shift (class weight none)", fontsize=8.5, loc="left")
     save(fig, OUT / "macro_f1_val_vs_2021.png")
 

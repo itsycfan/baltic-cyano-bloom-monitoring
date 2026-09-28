@@ -121,3 +121,10 @@ Problem / decision: With DINOv2 the NN-distance signal is near chance (val AUROC
 Root cause / options considered: Rerun the policy with `--exclude-signal nn_distance` (separate output folders, marked post hoc) for DINOv2 and ResNet-18, class weight none.
 Resolution: Workload rises without it (nominal 10%: DINOv2 45.8% to 55.5%, ResNet-18 37.7% to 48.1%), since the shared alpha loosens the thresholds of the remaining signals. At matched workload DINOv2 is unchanged and ResNet-18 is worse. The pre-registered policy is kept.
 Rejected alternatives (if a decision, not a bug) and why: Replacing the primary policy post hoc (not justified by the evidence, and would break the pre-registration).
+
+## 2026-09-28 — T1 final decision: no fusion; primary feature set DINOv2
+RQ: RQ1
+Problem / decision: Apply the pre-registered T1 rule once all four backbones and the two candidate fusions were available.
+Root cause / options considered: Best single by val macro F1 (class weight none): DINOv2 0.945. Top-2 singles: DINOv2 and BioCLIP 2 (0.931). Fusions on val: DINOv2 + BioCLIP 2 0.950 (+0.005), all four 0.944 (-0.001), ResNet-18 + DINOv2 0.947 (+0.002, interim candidate).
+Resolution: No fusion reaches +0.01; DINOv2 is the primary feature set (`t1_decision.json`). The all-four fusion is best on 2021 (0.755 vs 0.705) and on abundance, which is reported as a finding (validation cannot select for shift robustness) and not used to change the choice.
+Rejected alternatives (if a decision, not a bug) and why: Adopting the all-four fusion after seeing 2021 results (selection on the test set).

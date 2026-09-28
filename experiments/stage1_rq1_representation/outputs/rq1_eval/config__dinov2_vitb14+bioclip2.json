@@ -1,0 +1,10 @@
+{
+  "features": [
+    "dinov2_vitb14",
+    "bioclip2"
+  ],
+  "selection": "C by val macro F1 per class weight",
+  "temperature": "fitted on val NLL",
+  "ece_bins": 15,
+  "test_metrics_on": "classified 2021 images (Unclassifiable excluded)"
+}

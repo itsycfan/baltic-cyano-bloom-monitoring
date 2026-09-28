@@ -1,0 +1,9 @@
+features,class_weight,series,fp_from_unclassifiable_pp,fp_from_unclassifiable_images,fp_from_known_classes_pp,fp_from_known_classes_images,false_negatives_pp,false_negatives_images
+resnet18+dinov2_vitb14+clip_vitb16+bioclip2,none,N_fixing_filamentous_total,0.32240374334963007,348,0.06192990489292908,63,0.010327700357950722,31
+resnet18+dinov2_vitb14+clip_vitb16+bioclip2,none,Aphanizomenon_flosaquae,0.09398060795432495,140,0.03944059958528083,49,0.011324276272885521,33
+resnet18+dinov2_vitb14+clip_vitb16+bioclip2,none,Dolichospermum_total,0.21665574484870473,196,0.0290958382238857,35,0.005850860485730658,20
+resnet18+dinov2_vitb14+clip_vitb16+bioclip2,none,Oscillatoriales,0.21265996231436368,329,0.005197387847183097,10,0.002277774108852667,5
+resnet18+dinov2_vitb14+clip_vitb16+bioclip2,balanced,N_fixing_filamentous_total,0.13332276024687215,163,0.03258893295510786,36,0.029171803488564636,75
+resnet18+dinov2_vitb14+clip_vitb16+bioclip2,balanced,Aphanizomenon_flosaquae,0.04673859564778398,69,0.03087524331762797,40,0.024698614438181908,57
+resnet18+dinov2_vitb14+clip_vitb16+bioclip2,balanced,Dolichospermum_total,0.07136777569309995,78,0.00906341371461322,20,0.012304720096372047,44
+resnet18+dinov2_vitb14+clip_vitb16+bioclip2,balanced,Oscillatoriales,0.076826070518494,128,0.0040328329405758334,10,0.003542226544658383,8
