@@ -36,33 +36,259 @@ def label(feat):
 
 
 def fig_framework():
-    fig, ax = plt.subplots(figsize=(7.2, 2.7))
-    ax.set_xlim(-1, 101)
-    ax.set_ylim(-2, 36)
+    """Black-and-white technical schematic of the method (engineering-drawing style)."""
+    from matplotlib.patches import Arc, Rectangle
+
+    K = "black"
+    LW = 0.6
+    fig = plt.figure(figsize=(7.2, 5.6))
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set_xlim(0, 200)
+    ax.set_ylim(0, 155)
+    ax.set_aspect("equal")
     ax.axis("off")
-    w, gap, y, h = 12.0, 2.4, 16, 14
-    texts = ["IFCB images\nUtö 2021\n(62% unclass.)",
-             "Frozen\nbackbone\n(4 models)",
-             "Logistic\nregression\n+ temperature",
-             "kNN evidence\nagreement,\ndistance",
-             "Policy rules\n(any fires\n= review)",
-             "Simulated\nexpert\nreview",
-             "Abundance\nand bloom\ncurve"]
-    xs = [0.5 + i * (w + gap) for i in range(len(texts))]
-    for x, t in zip(xs, texts):
-        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.3", fc="#eef3f8", ec="#335", lw=0.8))
-        ax.text(x + w / 2, y + h / 2, t, ha="center", va="center", fontsize=6.4)
-    for i in range(len(xs) - 1):
-        ax.annotate("", xy=(xs[i + 1] - 0.3, y + h / 2), xytext=(xs[i] + w + 0.3, y + h / 2),
-                    arrowprops=dict(arrowstyle="->", lw=0.8, color="#335"))
-    ax.annotate("", xy=(xs[6] + w / 2, y - 0.3), xytext=(xs[4] + w / 2, y - 0.3),
-                arrowprops=dict(arrowstyle="->", lw=0.7, color="#777", connectionstyle="arc3,rad=0.35"))
-    ax.text((xs[4] + xs[6]) / 2 + w / 2, y - 8.8, "not flagged: prediction kept", ha="center", fontsize=5.8, color="#555")
-    for i0, i1, txt, c in [(1, 2, "RQ1 representation", PALETTE[0]), (3, 5, "RQ3 selective review", PALETTE[2]),
-                           (6, 6, "RQ2 abundance", PALETTE[1])]:
-        x0, x1 = xs[i0], xs[i1] + w
-        ax.plot([x0, x1], [2, 2], color=c, lw=2.2)
-        ax.text((x0 + x1) / 2, -1.8, txt, ha="center", fontsize=6.6, color=c)
+    fs, fs_s = 5.6, 4.8
+
+    def box(x, y, w, h, txt="", ls="-", fsz=fs, hatch=None, lw=LW):
+        ax.add_patch(Rectangle((x, y), w, h, fill=True, fc="white", ec=K, lw=lw, ls=ls, hatch=hatch))
+        if txt:
+            ax.text(x + w / 2, y + h / 2, txt, ha="center", va="center", fontsize=fsz)
+
+    def arrow(p0, p1, ls="-", lw=LW):
+        ax.annotate("", xy=p1, xytext=p0, arrowprops=dict(arrowstyle="-|>", lw=lw, ls=ls, color=K, mutation_scale=5,
+                                                        shrinkA=0, shrinkB=0))
+
+    def route(points, ls="-"):
+        """Orthogonal connector: straight segments, arrowhead on the last one."""
+        for p0, p1 in zip(points[:-2], points[1:-1]):
+            ax.plot([p0[0], p1[0]], [p0[1], p1[1]], color=K, lw=LW, ls=ls)
+        arrow(points[-2], points[-1], ls=ls)
+
+    def dim_h(x0, x1, y, txt, above=True, ext_from=None, fsz=fs_s):
+        """Horizontal dimension line at height y with extension lines from ext_from."""
+        if ext_from is not None:
+            for x in (x0, x1):
+                ax.plot([x, x], [ext_from, y + (0.8 if above else -0.8)], color=K, lw=0.35)
+        ax.annotate("", xy=(x1, y), xytext=(x0, y), arrowprops=dict(arrowstyle="<|-|>", lw=0.4, color=K,
+                                                                   mutation_scale=3.5, shrinkA=0, shrinkB=0))
+        ax.text((x0 + x1) / 2, y + (0.9 if above else -0.9), txt, fontsize=fsz, ha="center",
+                va="bottom" if above else "top")
+
+    def dim_v(y0, y1, x, txt, right=True, ext_from=None, fsz=fs_s):
+        if ext_from is not None:
+            for y in (y0, y1):
+                ax.plot([ext_from, x + (0.8 if right else -0.8)], [y, y], color=K, lw=0.35)
+        ax.annotate("", xy=(x, y1), xytext=(x, y0), arrowprops=dict(arrowstyle="<|-|>", lw=0.4, color=K,
+                                                                   mutation_scale=3.5, shrinkA=0, shrinkB=0))
+        ax.text(x + (1.0 if right else -1.0), (y0 + y1) / 2, txt, fontsize=fsz, ha="left" if right else "right",
+                va="center")
+
+    def panel(x, y, w, h, title):
+        ax.add_patch(Rectangle((x, y), w, h, fill=False, ec=K, lw=0.9))
+        ax.add_patch(Rectangle((x, y + h - 5), w, 5, fill=True, fc="#e6e6e6", ec=K, lw=0.9))
+        ax.text(x + 1.5, y + h - 2.5, title, fontsize=6.0, va="center", weight="bold")
+
+    # ---------------- data band ----------------
+    box(2, 136, 96, 15, lw=0.9)
+    ax.text(4, 148.2, "2022 TRAINING SET  (2016 to 2019, 50 classes)", fontsize=5.8, weight="bold", va="center")
+    ax.text(4, 144.2, "63,074 images; no sample IDs  →  stratified random split 80/20 (seed 0)", fontsize=fs,
+            va="center")
+    box(4, 137.5, 64, 4.4, "fit: 50,459  (classifier; kNN reference set)")
+    box(68, 137.5, 28, 4.4, "val: 12,615  (C, T, τ, M)", ls="--")
+    ax.plot([100, 100], [134.5, 152.5], color=K, lw=1.0)
+    ax.plot([101.4, 101.4], [134.5, 152.5], color=K, lw=1.0)
+    ax.text(100.7, 133.6, "no tuning on 2021", fontsize=fs_s, ha="center", va="top", style="italic")
+    box(103, 136, 95, 15, lw=0.9, ls=":")
+    ax.text(105, 148.2, "2021 TEST SET  (Utö, expert-verified samples)", fontsize=5.8, weight="bold", va="center")
+    ax.text(105, 144.2, "151,235 images = 57,207 classified (48 classes) + 94,028 unclassifiable", fontsize=fs,
+            va="center")
+    ax.text(105, 139.7, "59 samples → 47 weekly main-series samples (curves); 11 supplementary; 1 excluded",
+            fontsize=fs, va="center")
+    lx, ly = 113, 128.5
+    for i, (ls, t) in enumerate([("-", "data flow"), ("--", "fitted on 2022 validation split"),
+                                 (":", "2021 test set: evaluation only")]):
+        x0 = lx + [0, 20, 56][i]
+        ax.plot([x0, x0 + 5], [ly, ly], color=K, lw=0.8, ls=ls)
+        ax.text(x0 + 6, ly, t, fontsize=fs_s, va="center")
+
+    # ---------------- (A) preprocessing ----------------
+    panel(2, 70, 60, 54, "(A) Preprocessing")
+    rx, ry, rw, rh = 7, 106.5, 24, 3.3
+    ax.text(rx, 117.4, "raw ROI (example: Aphanizomenon)", fontsize=fs_s, va="center")
+    box(rx, ry, rw, rh)
+    ax.plot([rx + 1.5, rx + rw - 1.5], [ry + rh / 2, ry + rh / 2 + 0.3], color=K, lw=1.1)
+    dim_h(rx, rx + rw, ry + rh + 2.2, "W = 424 px", above=True, ext_from=ry + rh)
+    dim_v(ry, ry + rh, rx + rw + 2.2, "H = 58 px", right=True, ext_from=rx + rw)
+    sx, sy, ss = 9, 78, 20
+    box(sx, sy, ss, ss, hatch="......")
+    ax.add_patch(Rectangle((sx, sy + ss / 2 - 1.4), ss, 2.8, fc="white", ec=K, lw=LW))
+    ax.plot([sx + 1.2, sx + ss - 1.2], [sy + ss / 2, sy + ss / 2 + 0.3], color=K, lw=1.0)
+    dim_v(sy, sy + ss, sx - 2.2, "S", right=False, ext_from=sx)
+    arrow((rx + rw / 2, ry - 0.4), (sx + ss / 2, sy + ss + 0.4))
+    ax.text(sx + ss / 2 + 1.5, (ry + sy + ss) / 2, "pad to S × S,\nS = max(W, H)", fontsize=fs_s, va="center")
+    ax.text(sx + ss / 2, sy - 1.5, "fill = median border grey", fontsize=fs_s, ha="center", va="top")
+    tx, ty, ts = 42, 82, 12
+    box(tx, ty, ts, ts, hatch="......")
+    ax.add_patch(Rectangle((tx, ty + ts / 2 - 0.9), ts, 1.8, fc="white", ec=K, lw=LW))
+    ax.plot([tx + 0.8, tx + ts - 0.8], [ty + ts / 2, ty + ts / 2 + 0.2], color=K, lw=0.9)
+    arrow((sx + ss + 0.5, sy + ss / 2), (tx - 0.5, ty + ts / 2))
+    ax.text((sx + ss + tx) / 2, sy + ss / 2 + 1.6, "bicubic", fontsize=fs_s, ha="center")
+    dim_h(tx, tx + ts, ty + ts + 2.0, "224", above=True, ext_from=ty + ts)
+    dim_v(ty, ty + ts, tx + ts + 2.0, "224", right=True, ext_from=tx + ts)
+    ax.text(tx + ts / 2, ty - 1.5, "no crop\ngrey → 3 channels\nmodel mean / std", fontsize=fs_s, ha="center",
+            va="top")
+
+    # ---------------- (B) representation ----------------
+    panel(66, 70, 46, 54, "(B) Frozen representation  [RQ1]")
+    bb = [("ResNet-18", "ImageNet, supervised", 512), ("DINOv2 ViT-B/14", "self-supervised", 768),
+          ("CLIP ViT-B/16", "image-text, QuickGELU", 512), ("BioCLIP 2 ViT-L/14", "TreeOfLife-200M", 768)]
+    ax.text(103.7, 116.2, "L2-normalised", fontsize=fs_s, ha="center", va="center")
+    for i, (n, src, d) in enumerate(bb):
+        yy = 109 - i * 7.3
+        box(68, yy, 26, 5.8, f"{n}\n{src}", fsz=fs_s)
+        arrow((94.2, yy + 2.9), (97.5, yy + 2.9))
+        box(97.5, yy + 1.4, 12.5, 3.0, f"{d}-D", fsz=fs_s)
+    ax.text(89, 85.3, "weights frozen (no fine-tuning)", fontsize=fs_s, ha="center", style="italic")
+    cx0, cy0 = 70, 78
+    scale = 38 / 2560
+    xcur = cx0
+    for d, h in zip([512, 768, 512, 768], ["", "////", "", "\\\\\\\\"]):
+        ax.add_patch(Rectangle((xcur, cy0), d * scale, 3, fc="white", ec=K, lw=LW, hatch=h))
+        xcur += d * scale
+    ax.text(cx0, cy0 + 4.0, "fusion x = [x₁; x₂; …] (concatenation)", fontsize=fs_s, va="bottom")
+    dim_h(cx0, xcur, cy0 - 2.2, "D = 2560 for all four", above=False, ext_from=cy0)
+
+    # ---------------- (C) decision ----------------
+    panel(116, 70, 82, 54, "(C) Decision layer  [RQ1]")
+    box(118, 100, 22, 8, "standardise\n(fit split)")
+    box(145, 100, 30, 8, "multinomial LR\nz = W x + b,  W ∈ ℝ$^{50×D}$")
+    box(180, 100, 16, 8, "softmax\np = σ(z / T)")
+    arrow((140, 104), (145, 104))
+    arrow((175, 104), (180, 104))
+    route([(112, 97), (114, 97), (114, 104), (118, 104)])
+    ax.text(160, 114.5, "C ∈ {0.1, 1, 10} by val macro F1\nclass weight: none | balanced", fontsize=fs_s,
+            ha="center", va="center")
+    arrow((160, 111.8), (160, 108.2), ls="--")
+    ax.text(188, 114.5, "T: minimum\nNLL on val", fontsize=fs_s, ha="center", va="center")
+    arrow((188, 111.8), (188, 108.2), ls="--")
+    px0, py0 = 120, 77
+    rng = np.random.default_rng(3)
+    pv = rng.random(50) ** 6
+    pv[31] = 2.2
+    pv = pv / pv.max() * 11
+    for i, v in enumerate(pv):
+        ax.add_patch(Rectangle((px0 + i * 1.0, py0), 0.7, v, fc=K if i == 31 else "white", ec=K, lw=0.3))
+    dim_h(px0, px0 + 49.7, py0 - 2.0, "p over 50 training classes", above=False)
+    ax.text(px0 + 31.35, py0 + 11.8, "c = max p", fontsize=fs_s, ha="center", va="bottom")
+    route([(188, 100), (188, 96), (178.5, 96), (178.5, 93.5)])
+    ax.text(176.5, 92.5, "outputs\nŷ = argmax p\nc = max p\nclosed set: no\n'unknown' label",
+            fontsize=fs_s, va="top")
+
+    # ---------------- (D) evidence ----------------
+    panel(2, 6, 62, 58, "(D) Evidence layer: cosine kNN  [RQ3]")
+    ox, oy, R = 22, 25, 18
+    ax.add_patch(Arc((ox, oy), 2 * R, 2 * R, theta1=15, theta2=165, lw=LW, color=K))
+    ax.plot([ox - R - 1, ox + R + 1], [oy, oy], color=K, lw=0.3, ls="-.")
+    ax.plot(ox, oy, "o", ms=1.6, color=K)
+    ax.text(ox - 1.2, oy - 1.0, "O", fontsize=fs_s, ha="right", va="top")
+    qa = 90.0
+    q = (ox + R * np.cos(np.deg2rad(qa)), oy + R * np.sin(np.deg2rad(qa)))
+    angles = [(72, "^"), (79, "o"), (83, "o"), (96, "o"), (101, "s"), (105, "o"), (111, "o"), (40, "s"),
+              (132, "^"), (150, "s"), (55, "^"), (124, "o")]
+    pts = [((ox + R * np.cos(np.deg2rad(a_)), oy + R * np.sin(np.deg2rad(a_))), m, a_) for a_, m in angles]
+    near = sorted(pts, key=lambda t: abs(t[2] - qa))[:7]
+    for t in pts:
+        ax.plot(*t[0], t[1], ms=2.4, mfc=K if t in near else "white", mec=K, mew=0.5)
+    for t in near:
+        ax.plot([q[0], t[0][0]], [q[1], t[0][1]], color=K, lw=0.3)
+    ax.plot(*q, marker="*", ms=6, mfc="white", mec=K, mew=0.6)
+    ax.text(q[0], q[1] + 2.0, "query q", fontsize=fs_s, ha="center", va="bottom")
+    nn = min(pts, key=lambda t: abs(t[2] - qa))
+    ax.plot([ox, q[0]], [oy, q[1]], color=K, lw=0.5)
+    ax.plot([ox, nn[0][0]], [oy, nn[0][1]], color=K, lw=0.5, ls="--")
+    a0, a1 = sorted([qa, nn[2]])
+    ax.add_patch(Arc((ox, oy), 14, 14, theta1=a0, theta2=a1, lw=0.5, color=K))
+    ax.text(ox + 1.2, oy + 8.2, "θ$_{min}$", fontsize=fs_s, va="bottom")
+    dim_h(ox, ox + R, oy - 3.2, "‖x‖ = 1", above=False, ext_from=oy)
+    ax.text(43, 51, "reference set:\nfit split (50,459)", fontsize=fs_s, va="center")
+    ax.text(43, 42.5, "●  7 nearest (k = 7)\n○ △ □  other images;\nmarker = class",
+            fontsize=fs_s, va="center")
+    ax.text(4, 14.0, "d$_{NN}$ = 1 − cos θ$_{min}$   (large: unlike any training image)", fontsize=fs_s)
+    ax.text(4, 9.5, "a = (1/7) Σ$_j$ 1[y$_j$ = ŷ]   (neighbour agreement)", fontsize=fs_s)
+
+    # ---------------- (E) policy ----------------
+    panel(68, 6, 64, 58, "(E) Policy layer: triage rules  [RQ3]")
+    xs_ = np.linspace(0, 1, 80)
+    dens = np.exp(-((xs_ - 0.3) / 0.2) ** 2)
+    cut = 0.6
+    gate_in = []
+    for k, (lab, yb) in enumerate([("s₁ = 1 − c  (low confidence)", 47.5),
+                                   ("s₂ = 1 − a  (neighbours disagree)", 36.5),
+                                   ("s₃ = d$_{NN}$  (far from training set)", 25.5)]):
+        X = 71 + xs_ * 26
+        ax.plot(X, yb + dens * 5.5, color=K, lw=0.5)
+        ax.plot([71, 97], [yb, yb], color=K, lw=0.4)
+        m = xs_ >= cut
+        ax.fill_between(X[m], yb, yb + dens[m] * 5.5, facecolor="none", hatch="//////", edgecolor=K, lw=0)
+        ax.plot([71 + cut * 26] * 2, [yb, yb + 6.2], color=K, lw=0.6, ls="--")
+        ax.text(71 + cut * 26 + 0.5, yb + 6.2, "τ", fontsize=fs_s, va="center")
+        ax.text(71, yb + 7.3, lab, fontsize=fs_s, va="bottom")
+        gate_in.append(yb + 1.5)
+    gx0, gy0 = 112, 25
+    box(gx0, gy0, 9, 22, "≥1", fsz=7)
+    for k, yb in enumerate(gate_in):
+        route([(97.5, yb), (104 + k, yb), (104 + k, gy0 + 18 - k * 4.5), (gx0, gy0 + 18 - k * 4.5)])
+    ax.text(71, 18.2, "r: ŷ ∈ {N. spumigena, D. acuminata}", fontsize=fs_s, va="center")
+    route([(106, 18.2), (108, 18.2), (108, gy0 + 3.5), (gx0, gy0 + 3.5)])
+    route([(gx0 + 9, gy0 + 11), (gx0 + 16, gy0 + 11)])
+    ax.text(gx0 + 12.5, gy0 + 12.5, "review", fontsize=fs_s, ha="center", va="bottom")
+    ax.text(71, 13.0, "τ$_i$ = (1−α)-quantile of val scores (hatched tail = α),", fontsize=fs_s)
+    ax.text(71, 9.6, "one α for s₁–s₃, set by bisection so that", fontsize=fs_s)
+    ax.text(71, 6.9, "P$_{val}$(any rule) = nominal rate ∈ {1, 2, 5, 10, 20, 30, 50}%", fontsize=fs_s,
+            va="bottom")
+
+    # ---------------- (F) review and abundance ----------------
+    panel(136, 6, 62, 58, "(F) Review and abundance  [RQ2, RQ3]")
+    box(138, 48.5, 28, 7, "flagged: expert label\n(true; may be unclassifiable)", fsz=fs_s)
+    box(169, 48.5, 27, 7, "not flagged:\nkeep ŷ", fsz=fs_s)
+    box(138, 39.5, 58, 6, "per sample: n$_c$ = images labelled c;  N = all images", fsz=fs_s)
+    arrow((152, 48.5), (152, 45.5))
+    arrow((182.5, 48.5), (182.5, 45.5))
+    ax.text(139, 35.8, "CC:   p̂$_c$ = n$_c$ / N   (unclassifiable stay in N)", fontsize=fs_s, va="center")
+    ax.text(139, 31.6, "ACC:  q* = argmin$_{q ≥ 0, Σq = 1}$ ‖M q − p̂‖²,  with", fontsize=fs_s,
+            va="center")
+    box(150, 25.2, 27, 4.4, "M$_{ij}$ = P$_{val}$(ŷ = i | y = j)", ls="--", fsz=fs_s)
+    ax.text(139, 22.6, "metrics on 47 weekly samples: MAE, Pearson, Spearman,\npeak offset, onset at 1 / 2 / 5% "
+            "(1 Jun–30 Sep)", fontsize=fs_s, va="top")
+    gx, gy = 140, 9.2
+    tt = np.linspace(0, 1, 80)
+    truth = 5.6 * np.exp(-((tt - 0.62) / 0.08) ** 2) + 0.2
+    pred = truth + 1.6 * np.exp(-((tt - 0.42) / 0.07) ** 2)
+    X = gx + tt * 52
+    ax.plot(X, gy + truth, color=K, lw=0.9)
+    ax.plot(X, gy + pred, color=K, lw=0.7, ls=":")
+    ax.plot([gx, gx + 52], [gy, gy], color=K, lw=0.4)
+    thr = 1.6
+    ax.plot([gx, gx + 52], [gy + thr, gy + thr], color=K, lw=0.4, ls="--")
+    ax.text(gx + 52.6, gy + thr, "2%", fontsize=fs_s, va="center")
+    on_t, on_p = X[np.argmax(truth >= thr)], X[np.argmax(pred >= thr)]
+    for x in (on_p, on_t):
+        ax.plot([x, x], [gy + thr, gy - 1.6], color=K, lw=0.35)
+    ax.annotate("", xy=(on_t, gy - 1.2), xytext=(on_p, gy - 1.2), arrowprops=dict(
+        arrowstyle="<|-|>", lw=0.4, color=K, mutation_scale=3.5, shrinkA=0, shrinkB=0))
+    ax.text(on_t + 1.0, gy - 1.2, "Δ onset (early alarm)", fontsize=fs_s, va="center")
+    ax.text(gx + 1, gy + 5.0, "solid: truth\ndotted: prediction", fontsize=fs_s, va="center")
+
+    # ---------------- inter-panel connectors ----------------
+    arrow((62.2, 97), (65.8, 97))
+    route([(80, 70), (80, 67), (33, 67), (33, 64.2)])
+    ax.text(81, 67.6, "x", fontsize=fs_s, va="bottom")
+    route([(176, 70), (176, 67), (90, 67.0), (90, 64.2)])
+    ax.text(177, 67.6, "ŷ, c", fontsize=fs_s, va="bottom")
+    route([(64, 35), (66, 35), (66, 30.5), (69.5, 30.5)])
+    ax.text(63.5, 37.0, "a, d$_{NN}$", fontsize=fs_s, ha="right", va="center")
+    route([(gx0 + 16, gy0 + 11), (134, gy0 + 11), (134, 52), (137.6, 52)])
+    fig.savefig(OUT / "fig01_framework.svg", bbox_inches="tight")  # vector copy for the manuscript
     save(fig, OUT / "fig01_framework.png")
 
 
