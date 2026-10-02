@@ -73,7 +73,7 @@ The framework adapts the author's layered design for weld defect detection.
 
 - **Image level:** macro F1; precision, recall and F1 for target classes; ECE.
 - **Sample level:** MAE of target relative abundance; correlation with the ground-truth curve; peak-week offset; onset agreement; per-sample detection and count errors for *N. spumigena*.
-- **Onset definition:** the first main-series sample between 1 June and 30 September whose N-fixing filamentous total reaches a threshold. Thresholds of 1%, 2% and 5% are fixed in advance and all are reported. The season window is needed because small winter samples give a 1 to 3% background of *Aphanizomenon* (for example 7 to 13 images out of 350 to 900). Ground-truth onsets: 8 June (1%), 29 June (2% and 5%).
+- **Onset definition:** the first main-series sample between 1 June and 30 September whose N-fixing filamentous total reaches a threshold. Thresholds of 1%, 2% and 5% are fixed in advance and all are reported. The season window is needed because the winter community is sparse (350 to 900 images per sample against several thousand in summer), so a few large *Aphanizomenon* filaments make up 1 to 3% of images and 15 to 20% of particle area; relative abundance cannot show that absolute concentrations are low, and these values are not a bloom. Ground-truth onsets: 8 June (1%), 29 June (2% and 5%).
 - **Policy level:** abundance error as a function of review rate.
 
 ## Out of scope

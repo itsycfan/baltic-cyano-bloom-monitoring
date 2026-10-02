@@ -1,0 +1,27 @@
+{
+  "preregistration": "docs/ANALYSIS_PLAN.md Addendum 2",
+  "configs": [
+    [
+      "dinov2_vitb14",
+      "none"
+    ],
+    [
+      "resnet18",
+      "none"
+    ],
+    [
+      "dinov2_vitb14",
+      "balanced"
+    ],
+    [
+      "resnet18",
+      "balanced"
+    ]
+  ],
+  "weights": {
+    "count": null,
+    "area": "area_px",
+    "bbox": "bbox_px"
+  },
+  "segmentation": "src/morphology.py"
+}

@@ -35,7 +35,7 @@
     "N_fixing_filamentous_total": "N-fixing filamentous (total)"
   },
   "onset": {
-    "description": "Bloom onset = first main-series sample inside the search window whose relative abundance of the series reaches the threshold. Several thresholds are fixed a priori and all are reported (sensitivity analysis). The search window restricts onset to the summer bloom season (docs: recurrent summer blooms), because small winter samples produce a 1 to 3% background of Aphanizomenon.",
+    "description": "Bloom onset = first main-series sample inside the search window whose relative abundance of the series reaches the threshold. Several thresholds are fixed a priori and all are reported (sensitivity analysis). The search window restricts onset to the summer bloom season (docs: recurrent summer blooms), because a few large Aphanizomenon filaments in the sparse winter community reach 1 to 3% of images; relative abundance cannot show that their absolute concentration is low.",
     "series": "N_fixing_filamentous_total",
     "thresholds": [
       0.01,

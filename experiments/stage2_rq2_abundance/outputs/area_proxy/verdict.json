@@ -1,0 +1,14 @@
+{
+  "rule": "holds if unclassifiable particles remain the largest positive source of area-weighted N-fixing CC bias for both backbones (class weight none)",
+  "largest_source_per_backbone": {
+    "dinov2_vitb14": "fp_from_unclassifiable",
+    "resnet18": "fp_from_unclassifiable"
+  },
+  "holds": true,
+  "descriptive_filamentous_area_share_jul_aug": {
+    "mean": 0.2483517688446808,
+    "max": 0.5464005694508354,
+    "count_based_mean": 0.06052896750919881,
+    "note": "Kraft et al. (2022) report filamentous cyanobacteria at about a third of total phytoplankton biomass in the 2021 bloom season (biovolume-based, high frequency); this is image area, weekly."
+  }
+}
