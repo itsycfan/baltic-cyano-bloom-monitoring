@@ -4,6 +4,10 @@ This repository follows `template-rq-driven-research`'s SOP-1 / SOP-2 (see the r
 
 ## Always
 
+- Start a new session by reading `docs/START_HERE.md` (status, layout, reproduction, rules, open to-dos), then `docs/02_proposal.md` and `docs/RQ_MAPPING.md`.
+- Never tune or select on the 2021 test set. New analyses are pre-registered in `docs/ANALYSIS_PLAN.md` before they run; post hoc analyses are labelled as such and change no decision. New comparisons must pass the scope rule in `docs/02_proposal.md`.
+- Every number written into a document or the paper must come from an output file in the repository.
+- Do not add AI co-author trailers (for example "Co-Authored-By: Claude") to commit messages; AI use is disclosed in the paper instead.
 - Read `docs/02_proposal.md` and `docs/RQ_MAPPING.md` first, in that order, before touching code. They define which research question (RQ) any given piece of work belongs to.
 - Every experiment, script, or non-trivial code change belongs to exactly one RQ. If it doesn't, stop and ask whether it belongs in `docs/00_project_definition.md` (scope) instead.
 - After resolving a non-trivial bug, or making a decision between two or more real options (a library, an architecture, a hyperparameter search strategy), append one entry to `docs/DEV_LOG.md` in the format already at the top of that file. Do this immediately, not at session end — the reasoning is easiest to capture right after making the call.

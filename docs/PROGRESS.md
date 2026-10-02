@@ -1,6 +1,6 @@
 # Progress Tracker (overnight session 2026-09-26)
 
-Working log for the autonomous session while Yuchen is offline. Local commits only, nothing pushed. Decisions that need Yuchen are collected at the end.
+Historical log of the autonomous run of 26 to 28 September 2026 (closed). Current status and open items: `docs/START_HERE.md`. Findings F1 to F25 below were all carried into `docs/PROJECT_REPORT.md`; where later checks refined a finding, the report and `DEV_LOG.md` hold the final wording.
 
 ## Background jobs
 

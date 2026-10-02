@@ -1,6 +1,6 @@
 # Project Report: From Image Errors to Bloom Curves
 
-Status: **complete for all pre-registered analyses, 2026-09-28.** Four frozen backbones, three fusions, two class weightings, RQ1 to RQ3. Every number below comes from a file in the repository (paths given) and was checked against it. Local commits only; nothing has been pushed.
+Status: **final, 2026-10-02.** RQ1 to RQ3 concluded (tags `rq1-concluded` to `rq3-concluded`), roadmap and framework at `vFinal`. Four frozen backbones, three fusions, two class weightings, plus two pre-registered validity checks. Every number below comes from a file in the repository (paths given) and was checked against it. Start reading at `docs/START_HERE.md`.
 
 ## Framing
 
@@ -135,13 +135,16 @@ Source: `experiments/stage3_rq3_selective_review/outputs/<features>__<class weig
 
 ## 10. Status of RQs
 
-All three RQs meet the "concluded when" criteria in `02_proposal.md`. They stay TESTING in `RQ_MAPPING.md` until Yuchen reviews the results; then CONCLUDE and tags `rq1-concluded` to `rq3-concluded`.
+All three RQs are CONCLUDE (2026-10-02; tags `rq1-concluded`, `rq2-concluded`, `rq3-concluded`). The roadmap and framework were updated to vFinal in `02_proposal.md` and logged in `CHANGELOG.md` (tag `vFinal`).
 
-## 11. Decisions needed from Yuchen
+## 11. Decisions (resolved) and open items
 
-1. **Review and push.** Local commits since `v0.1-stage0` are not pushed.
-2. **Mark RQ1 to RQ3 as CONCLUDE and tag them**, or request further analyses first.
-3. **Primary configuration for the paper.** The pre-registered primary is DINOv2 with class weight none. The balanced variant has half the abundance error and correct onsets. Options: keep none as primary and report balanced as the key RQ2 result (recommended, consistent with pre-registration), or present both as primary.
-4. **The all-four fusion.** It is best on 2021 but was rejected by the val-only rule. Recommended: keep DINOv2 as primary and report the fusion's 2021 advantage as the "validation cannot select for shift" finding; do not switch post hoc.
-5. **Proposal deviations** in section 8 (T1 on val only; distance exception) need your approval before they go into `02_proposal.md` vFinal and `CHANGELOG.md`.
-6. **Scope** is now governed by the scope rule in `02_proposal.md`. Plan A of the threshold check is done; plan B, the timing benchmark and deployment-period calibration are tentative future work, to be decided when writing.
+1. **Push:** done; unpushed history was cleaned of the manuscript and a third-party PDF before the first push (see `DEV_LOG.md`).
+2. **Concluding the RQs:** done, with tags.
+3. **Primary configuration:** DINOv2 with class weight none, as pre-registered; the balanced variant is reported as the key RQ2 result (applied in manuscript v1).
+4. **All-four fusion:** kept as a finding (validation cannot select for shift robustness); not adopted post hoc.
+5. **Proposal deviations** (T1 on validation only; distance exception): recorded in `02_proposal.md` vFinal and `CHANGELOG.md`.
+6. **Scope:** governed by the scope rule; plan A threshold check and area proxy done; plan B, timing benchmark and deployment-period calibration are tentative future work.
+7. **Target output:** open preprint (arXiv, EarthArXiv) with Zenodo DOI; CVC 2027 dropped.
+
+Open items for the author (quartiles, image licence, affiliation, Zenodo, preprint posting) are listed in `docs/START_HERE.md`, section 8.

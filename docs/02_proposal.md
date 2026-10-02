@@ -37,56 +37,61 @@ Confirmed against Kraft et al. (2022), who published near-real-time biomass of t
 
 > **Finding to carry into the paper:** the most toxic target taxon is also the one least observable through abundance curves, because its images are too rare per sample. This motivates routing it to expert review through the high-risk rule of the policy layer rather than relying on automatic counts.
 
-## Research Roadmap (v0)
+## Research Roadmap (vFinal)
 
-1. **Stage 0, data audit:** parse file names into a sample table, count samples per ISO week, verify temporal separation of training and test data, and plot the ground-truth bloom curve.
-   - **Main series:** the 2021 set combines regular weekly samples (Tuesday around 12:00) with supplementary samples chosen to enrich rare classes. Supplementary samples are not a random draw: they over-weight some weeks and favour moments rich in rare taxa. All curve metrics therefore use a main series of one complete sample per ISO week, the sample closest to Tuesday 12:00. The rule uses timestamps only. A sample is complete if its particle-index coverage (images / highest particle index) is at least 0.5. Supplementary samples are used only for sensitivity analysis.
-   - **Result:** 47 main-series samples, 11 supplementary, 1 incomplete sample excluded (week 29, 50 images of one class); weeks 1, 2, 29, 41 and 42 have no main-series sample.
-2. **Stage 1, RQ1:** extract frozen features, train logistic regression, run T1 (fusion) and T2 (calibration).
-3. **Stage 2, RQ2:** aggregate predictions per sample and compare classify-and-count with ACC.
-4. **Stage 3, RQ3:** run T3 (signal validity) and T4 (thresholds), apply the triage policy with simulated review, and compare with ACC.
-5. **Optional ablation:** BioCLIP 2 zero-shot classification with taxon names as text prompts.
+Status on 2026-10-02: all stages complete; RQ1 to RQ3 concluded (tags `rq1-concluded` to `rq3-concluded`). The v0 roadmap is preserved at tag `v0-proposal`; differences are listed in `CHANGELOG.md`.
 
-RQ2 and RQ3 depend on the features and classifier from RQ1. RQ3 also depends on T3, which determines which signals enter the policy.
+1. **Stage 0, data audit (done):** file names parsed into a sample table; class counts checked against the dataset description; train/test separation checked (MD5, no shared images); weekly coverage; ground-truth bloom curve.
+   - **Main series:** the 2021 set combines regular weekly samples (Tuesday around 12:00) with supplementary samples chosen to enrich rare classes. Supplementary samples are not a random draw, so all curve metrics use a main series of one complete sample per ISO week, the sample closest to Tuesday 12:00 (timestamps only). A sample is complete if images / highest particle index is at least 0.5. Supplementary samples are used only for sensitivity analysis.
+   - **Result:** 47 main-series samples, 11 supplementary, 1 incomplete sample excluded (week 29); weeks 1, 2, 29, 41 and 42 have no main-series sample. The seasonal sequence matches Kraft et al. (2022).
+2. **Stage 1, RQ1 (done):** frozen features from four backbones, logistic regression, T1 (fusion) and T2 (calibration); 2021 evaluated once with pre-registered choices.
+3. **Stage 2, RQ2 (done):** classify and count vs ACC, curve metrics, error decomposition, *N. spumigena* as detection; two pre-registered validity checks (class-specific probability thresholds; area-weighted abundance).
+4. **Stage 3, RQ3 (done):** T3 (signal validity), T4 (thresholds on validation), simulated review against confidence-only and random review at matched workload, comparison with ACC.
+5. **Optional ablation (not done):** BioCLIP 2 zero-shot classification; outside the scope rule, left as future work.
+6. **Write-up (done):** project report (`docs/PROJECT_REPORT.md`) and manuscript draft (local `paper/`, not in the repository).
 
-## Technical Framework (v0)
+## Technical Framework (vFinal)
 
-The framework adapts the author's layered design for weld defect detection.
+The framework adapts the author's layered design for weld defect detection. Every decision below was pre-registered in `ANALYSIS_PLAN.md` before the 2021 data were used.
 
-- **Representation layer:** frozen features from DINOv2 ViT-B/14 (768-D), CLIP ViT-B/16, BioCLIP 2 and ImageNet ResNet-18 (512-D). Fusion by L2 normalizing each feature and concatenating; kept only if T1 shows a clear gain (about 1 point of macro F1 or more).
-- **Validation split:** training filenames carry no sample ID, so a sample-level split is not possible. Contiguous index blocks were planned as pseudo-samples, but the check failed: neighbouring training indices are no more similar than random same-class pairs (excess cosine 0.0002), whereas the same test on 2021 images sorted by sample gives 0.0117 in all 26 classes. Indices therefore do not follow acquisition order. A per-class stratified random split (80/20, seed 0) is used. Leakage risk is reported as a limitation; its size is bounded by the modest within-sample similarity gain (0.014 cosine on 2021 data).
-- **Preprocessing:** every image is padded to a square with its median border intensity and resized to 224 x 224 without cropping, because filaments are elongated (median aspect ratio 7.3 for *Aphanizomenon*); each backbone keeps its own normalisation. Absolute particle size is lost by resizing; adding it back is a possible ablation, not planned.
-- **Decision layer:** multinomial logistic regression returning the predicted class, softmax confidence and top-2 classes. Trained with and without class-balanced weights, since balanced weights raise predicted proportions of rare classes and may inflate their abundance.
-- **Evidence layer:** cosine kNN retrieval on the training set (k = 7 as a starting value), returning neighbour label agreement and nearest-neighbour distance. Distance flags out-of-distribution images, including unclassifiable particles that logistic regression cannot reject.
-- **Policy layer:** an image is sent to human review if any rule fires: neighbour label disagreement, low confidence, large neighbour distance, or a prediction in a high-risk taxon. Other images keep the predicted label. Thresholds from the weld system are not reused; all thresholds are set on a validation split of the 2022 data for target review rates, never on the 2021 test set.
-- **Simulated review:** reviewed images receive their ground-truth label (including unclassifiable), and abundance is recomputed.
-- **Output:** per image, label, source (automatic or review), confidence and neighbour evidence; per sample, relative abundance of each taxon over all images in the sample, unclassifiable images included.
+- **Preprocessing:** each image is padded to a square with its median border grey and resized to 224 x 224 without cropping (filaments are elongated; median aspect ratio 7.3 for *Aphanizomenon*); grey copied to three channels; each backbone keeps its own normalisation.
+- **Representation layer:** frozen ResNet-18 (512-D), DINOv2 ViT-B/14 (768-D), CLIP ViT-B/16 with QuickGELU (512-D) and BioCLIP 2 ViT-L/14 (768-D), each L2-normalised. Fusion candidates: the top two single backbones by validation macro F1 and all four. **Outcome: no fusion reached the +0.01 rule; the primary feature set is DINOv2.** The all-four fusion was best on 2021, reported as a finding (validation from the training years does not select the most shift-robust model).
+- **Validation split:** stratified random 80/20 (seed 0). A pseudo-sample split by index blocks was planned but rejected, because training indices carry no acquisition order (index-adjacency check with a 2021 positive control).
+- **Decision layer:** standardisation and multinomial logistic regression; C from {0.1, 1, 10} by validation macro F1; class weight none (primary) and balanced (reported throughout, since it halves abundance error); temperature fitted on validation. Closed set: no "unknown" output.
+- **Abundance:** classify and count (CC) and adjusted classify and count (ACC, misclassification matrix from validation, constrained least squares). Denominator: all images in the sample, unclassifiable included.
+- **Evidence layer:** cosine kNN on the fit split, k = 7; neighbour agreement and nearest-neighbour distance.
+- **Policy layer:** review if any rule fires: low confidence, neighbour disagreement, large distance, or a prediction of *N. spumigena* or *D. acuminata* (high-risk rule). One shared quantile level per nominal rate, found by bisection on validation; thresholds applied unchanged to 2021. The distance signal is kept although weak (a post hoc check showed that removing it raises workload).
+- **Simulated review:** reviewed images take their true label (including unclassifiable); comparison policies review the same number of images (confidence-only, random).
+- **Validity checks:** class-specific probability thresholds set on validation (in the spirit of the Utö pipeline) and area-weighted abundance as a biomass proxy; both confirm that unclassifiable particles are the largest error source.
 
-### Preliminary tests
+### Preliminary tests and outcomes
 
-- **T1, fusion:** compare macro F1 of single and fused features on the 2022 validation split and the labelled 2021 images.
-- **T2, calibration:** reliability diagram and ECE on 2021 data; temperature scaling on the 2022 validation split if needed.
-- **T3, signal validity:** AUROC of low confidence, neighbour disagreement and neighbour distance for detecting images that are misclassified or unclassifiable; signals near 0.5 are dropped.
-- **T4, thresholds:** set on the 2022 validation split for target review rates.
+- **T1, fusion:** decided on validation only (the v0 wording also mentioned 2021 images; the project rule of no tuning on 2021 takes precedence). No fusion adopted.
+- **T2, calibration:** temperature fitted on validation improves 2021 ECE only when T > 1; calibration from the training years does not reliably transfer.
+- **T3, signal validity:** low confidence (validation AUROC 0.94 to 0.97) and neighbour disagreement (0.87 to 0.94) kept; distance kept by the pre-registered exception (validation contains no out-of-class particles), and turned out to be the weakest detector of unclassifiable particles on 2021.
+- **T4, thresholds:** set on validation; nominal 1, 5 and 10% became 2 to 10%, 22 to 41% and 36 to 58% of 2021 images.
 
 ### Evaluation metrics
 
-- **Image level:** macro F1; precision, recall and F1 for target classes; ECE.
-- **Sample level:** MAE of target relative abundance; correlation with the ground-truth curve; peak-week offset; onset agreement; per-sample detection and count errors for *N. spumigena*.
-- **Onset definition:** the first main-series sample between 1 June and 30 September whose N-fixing filamentous total reaches a threshold. Thresholds of 1%, 2% and 5% are fixed in advance and all are reported. The season window is needed because the winter community is sparse (350 to 900 images per sample against several thousand in summer), so a few large *Aphanizomenon* filaments make up 1 to 3% of images and 15 to 20% of particle area; relative abundance cannot show that absolute concentrations are low, and these values are not a bloom. Ground-truth onsets: 8 June (1%), 29 June (2% and 5%).
-- **Policy level:** abundance error as a function of review rate.
+- **Image level:** macro F1 over the 48 classes present in 2021; precision, recall and F1 for targets; ECE (15 bins).
+- **Sample level (47 main-series samples):** MAE in percentage points with bootstrap CI, bias, Pearson and Spearman correlation, peak-week offset, onset error; error decomposition; *N. spumigena* per-sample detection and false positives.
+- **Onset definition:** the first main-series sample between 1 June and 30 September whose N-fixing filamentous total reaches 1%, 2% or 5% (all reported). The window is needed because the winter community is sparse, so a few large *Aphanizomenon* filaments make up 1 to 3% of images and 15 to 20% of particle area without forming a bloom. Ground-truth onsets: 8 June (1%), 29 June (2% and 5%).
+- **Policy level:** abundance error against realised review rate, with matched-workload baselines.
 
 ## Out of scope
 
-Carried from `00_project_definition.md` §4.3: VLM reasoning, end-to-end fine-tuning, biomass or concentration estimates, and bloom forecasting.
+Carried from `00_project_definition.md` §4.3: VLM reasoning, end-to-end fine-tuning, absolute biomass or concentration estimates, and bloom forecasting. New comparisons follow the scope rule above.
 
 ## Known limitations
 
-- Review is simulated as a perfect taxonomist, which overstates its benefit; real review involves errors and time cost.
+- Random validation split (no sample identifiers in the training data); validation scores are somewhat optimistic.
+- One sample per week (the instrument samples about every 20 minutes); short peaks can be missed, as on 19 and 20 July 2021.
+- Review is simulated as instant and always correct; review latency and expert error are not modelled.
 - The 2021 labels were corrected from CNN predictions and may be anchored to that model.
-- Relative abundance counts images, not biomass: a filament counts once regardless of length. Summed pixel area may serve as a rough biovolume proxy.
-- A single station and a single year.
+- Abundance is counted in images; the area proxy is a simple segmentation, not a calibrated biovolume.
+- A single station and a single year; *N. spumigena* conclusions rest on 5 main-series images.
+- Frozen backbones and a linear classifier; fine-tuned networks were not tested.
 
----
+## Future work (tentative, to be decided when writing)
 
-When this is stable: commit, tag `v0-proposal`, and initialize `RQ_MAPPING.md` with the table above.
+Open-set methods (for example kNN-distance rejection or thresholds learned from deployment-period unclassifiable particles); review thresholds calibrated on the first weeks of a season (plan B); a two-stage alert workflow (automatic provisional alert, expert confirmation) with realistic review times; higher temporal resolution; a timing benchmark; BioCLIP 2 zero-shot ablation.
