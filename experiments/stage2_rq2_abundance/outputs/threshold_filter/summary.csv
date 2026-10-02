@@ -1,0 +1,5 @@
+features,class_weight,rejected_share_unclassifiable,rejected_share_classified,rejected_share_classified_correct,median_threshold,share_classes_threshold_zero,nod_fp_samples_filtered,nod_tp_samples_filtered,nod_pred_images_filtered,nod_true_images,nfix_largest_positive_source_after_filter,nfix_unclassifiable_share_of_positive_bias_after_filter
+dinov2_vitb14,none,0.11857106393840133,0.03448878633733634,0.016011875309252844,0.0,0.52,12,4,30,5,fp_from_unclassifiable,0.6687465596194903
+resnet18,none,0.077476921767984,0.0460433163773664,0.02331191426680614,0.445,0.38,10,4,17,5,fp_from_unclassifiable,0.7756559856432879
+dinov2_vitb14,balanced,0.0908240098694006,0.03041585819917143,0.011793592014168412,0.165,0.5,4,4,11,5,fp_from_unclassifiable,0.6124539389469098
+resnet18,balanced,0.11003105457948696,0.056549023720873316,0.023215972237475017,0.475,0.28,8,4,14,5,fp_from_unclassifiable,0.726184435155416

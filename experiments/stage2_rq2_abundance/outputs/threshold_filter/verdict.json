@@ -1,0 +1,8 @@
+{
+  "rule": "holds if unclassifiable remains the largest positive source of N-fixing CC bias after filtering for both backbones (class weight none)",
+  "largest_source_per_backbone": {
+    "dinov2_vitb14": "fp_from_unclassifiable",
+    "resnet18": "fp_from_unclassifiable"
+  },
+  "holds": true
+}

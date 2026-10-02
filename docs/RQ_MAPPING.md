@@ -14,6 +14,7 @@ Observations that should appear in the paper, with the stage that produced them.
 
 - **Stage 0 (feeds RQ2, RQ3):** *Nodularia spumigena*, the most toxic target, is nearly invisible in abundance curves: 5 images across 47 main-series samples (at most 2 per sample, peak 0.03%) against 57 in supplementary samples. It is evaluated as a detection task, and the result motivates the high-risk review rule in the policy layer. RQ3 should report how many *N. spumigena* images the high-risk rule routes to review and how many would be missed without it.
 - **Stage 1 to 3 (key results, see `docs/PROJECT_REPORT.md`):** abundance error is dominated by unclassifiable particles (open-set); accuracy rankings do not predict abundance rankings; in-distribution validation does not select the most shift-robust model (all-four fusion); val-calibrated review budgets inflate by a factor of about 2 to 10 on 2021; evidence-based triage beats confidence-only where errors are confident (Oscillatoriales).
+- **RQ2 validity check (2 Oct):** class-specific probability thresholds set on val (Kraft-style) reject only 8 to 12% of unclassifiable images; unclassifiable particles stay the largest error source; the open-set conclusion holds.
 - **Stage 0 (method):** the 2021 set mixes regular weekly and rare-class supplementary samples; curve metrics use a one-sample-per-week main series to avoid over-weighting rare-class weeks.
 
 ## Closed RQs: detail
