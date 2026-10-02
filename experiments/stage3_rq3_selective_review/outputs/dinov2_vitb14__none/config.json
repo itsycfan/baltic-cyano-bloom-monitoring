@@ -1,6 +1,7 @@
 {
   "features": "dinov2_vitb14",
   "class_weight": "none",
+  "excluded_post_hoc": [],
   "k": 7,
   "auroc_keep": 0.6,
   "kept_signals": [

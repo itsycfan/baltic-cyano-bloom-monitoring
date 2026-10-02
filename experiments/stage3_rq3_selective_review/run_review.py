@@ -119,6 +119,12 @@ def abundance_series(labels, sid, ids, n_images, groups):
     return pd.DataFrame(out / n_images.to_numpy()[:, None], index=ids, columns=names)
 
 
+
+def pretty(feat):
+    """Readable feature-set name for figure titles."""
+    names = {"resnet18": "ResNet-18", "dinov2_vitb14": "DINOv2", "clip_vitb16": "CLIP", "bioclip2": "BioCLIP 2"}
+    return " + ".join(names.get(f, f) for f in feat.split("+"))
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--features", required=True)
@@ -266,7 +272,7 @@ def main():
     for ax in axes[:, 0]:
         ax.set_ylabel("MAE (pp)")
     axes[0, 0].legend(frameon=False, fontsize=7)
-    fig.suptitle(f"Abundance error vs review workload, {feat}, class weight {cw}", fontsize=9)
+    fig.suptitle(f"Abundance error vs review workload, {pretty(feat)}, class weight {cw}", fontsize=9)
     save(fig, out / "mae_vs_review_rate.png")
 
     tr = pd.DataFrame(thr_rows)

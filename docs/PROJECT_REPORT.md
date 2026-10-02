@@ -71,10 +71,10 @@ MAE of the N-fixing filamentous total over the 47 main-series samples (percentag
 | ResNet-18 | 0.80 | 0.70 | 0.42 | 0.35 |
 | CLIP | 1.03 | 0.93 | 0.35 | 0.32 |
 | BioCLIP 2 | 0.58 | 0.55 | 0.33 | 0.30 |
-| **DINOv2 (primary)** | 0.42 | 0.39 | 0.21 | 0.19 |
+| **DINOv2 (primary)** | 0.42 | 0.38 | 0.21 | 0.19 |
 | DINOv2 + BioCLIP 2 | 0.46 | 0.44 | 0.22 | 0.22 |
-| ResNet-18 + DINOv2 | 0.40 | 0.37 | 0.18 | 0.17 |
-| All four | 0.37 | 0.35 | 0.15 | 0.15 |
+| ResNet-18 + DINOv2 | 0.40 | 0.37 | 0.17 | 0.17 |
+| All four | 0.37 | 0.34 | 0.15 | 0.15 |
 
 - **Error source:** unclassifiable particles cause 70 to 85% of the positive CC bias in every configuration; confusion among known classes causes the rest; missed target images offset only 0.01 to 0.04 pp (`rq2_cc_error_decomposition.csv`).
 - **Curve shape:** the peak week of the N-fixing total is correct in every configuration. Errors sit in the off-season baseline. Without review, the 2% onset is predicted 3 to 4 weeks early in 9 of 14 CC configurations (a false early warning driven by a 1 June sample that is 92% unclassifiable); 4 configurations, all with balanced weights (DINOv2, DINOv2 + BioCLIP 2, ResNet-18 + DINOv2, all four), get all three onsets right.

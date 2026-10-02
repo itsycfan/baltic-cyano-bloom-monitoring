@@ -95,6 +95,12 @@ def error_decomposition(feat, cw, samples, groups, ids):
     return rows
 
 
+
+def pretty(feat):
+    """Readable feature-set name for figure titles."""
+    names = {"resnet18": "ResNet-18", "dinov2_vitb14": "DINOv2", "clip_vitb16": "CLIP", "bioclip2": "BioCLIP 2"}
+    return " + ".join(names.get(f, f) for f in feat.split("+"))
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--features", required=True, help="feature set name as used in checkpoints/preds")
@@ -164,7 +170,7 @@ def main():
     axes[-1].xaxis.set_major_locator(mdates.MonthLocator())
     axes[-1].xaxis.set_major_formatter(mdates.DateFormatter("%b"))
     axes[-1].set_xlabel("2021 (Utö), main series")
-    fig.suptitle(f"Predicted vs ground-truth abundance, {feat}", fontsize=9.5)
+    fig.suptitle(f"Predicted vs ground-truth abundance, {pretty(feat)}", fontsize=9.5)
     save(fig, out / "curves_main_series.png")
 
     main_rows = res[(res.sample_set == "main")]

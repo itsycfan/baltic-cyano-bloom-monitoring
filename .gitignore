@@ -27,3 +27,6 @@ checkpoints/
 
 # Third-party papers (kept local)
 references/
+
+# Generated previews
+paper/*_preview.pdf
