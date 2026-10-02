@@ -10,6 +10,19 @@
 
 Either outcome is informative. If foundation-model features classify worse but yield more stable abundance, evaluation should move from accuracy to abundance. If image-level gaps are amplified at the abundance level, model choice matters directly for operational monitoring.
 
+## Methodological positioning
+
+The contribution is an evaluation and decision methodology, not a better classifier: it traces image-level classification errors to errors in sample-level bloom curves (RQ1 to RQ2) and corrects them with evidence-based selective expert review (RQ3). The study is a retrospective evaluation in a near-real-time-capable setting: the Utö IFCB pipeline classifies images about two hours after capture (Kraft et al., 2022), and this work measures the quality of that observation layer and the review effort it needs, on weekly expert-verified samples.
+
+## Scope rule
+
+A comparison or experiment enters the study only if it meets one of two conditions:
+
+1. **Required by a research question.** Examples: ACC (RQ2 asks whether it corrects abundance); random and confidence-only review (RQ3 asks whether the triage policy adds value); four backbones and fusion (RQ1).
+2. **Needed to test whether a stated conclusion holds.** Example: class-specific probability thresholds, the open-set filter used operationally at Utö on the same data (Kraft et al., 2022), test whether the RQ2 conclusion "abundance error is dominated by unclassifiable particles" still holds when such a filter is applied.
+
+Everything else (newer classifiers, other open-set methods, extra benchmarks) goes to discussion or future work. Post hoc analyses are allowed only as descriptive diagnostics, are labelled post hoc, and never change a pre-registered decision.
+
 ### Target classes
 
 To be confirmed against Kraft et al. (2021, 2022). Training image counts in brackets.

@@ -35,3 +35,14 @@ Written on 2026-09-26, 00:30, before any model was evaluated on the 2021 test se
 - **Comparison policies at matched realised 2021 review rates:** random review (mean of 20 draws, seed 0) and confidence-only review. Reference lines: CC and ACC without review.
 - **Primary configuration:** primary feature set with class_weight none. Class_weight balanced is a sensitivity analysis.
 - **Reported:** MAE of each series versus realised review rate; onset and peak agreement at 10% nominal review; *N. spumigena* images routed by each rule and missed.
+
+## Addendum 1 (2026-10-02, before running): validity check with class-specific probability thresholds
+
+Added under the scope rule in `02_proposal.md` (condition 2). Written and committed before the analysis is run.
+
+- **Question:** does the RQ2 conclusion "unclassifiable particles are the largest source of abundance error" still hold when the operational open-set filter of Kraft et al. (2022) is applied?
+- **Method (val only, plan A):** for each class c, a threshold t_c is chosen on the 2022 validation split to maximise that class's F1, searching t in {0.00, 0.01, ..., 0.99} (ties: lowest t). An image is assigned to its argmax class c if the calibrated probability (val temperature from T2) is at least t_c; otherwise it is left unclassified. No 2021 data is used. Differences from Kraft et al.: their fine-tuned CNN and fixed logit scaling (ln 1.3) are replaced by our frozen features, logistic regression and val temperature; their validation data contained unclassifiable images, ours cannot (none exist in the public training set).
+- **Configurations:** DINOv2 (primary) and ResNet-18 (the architecture used by Kraft et al.), class weight none; class weight balanced as sensitivity.
+- **Outputs on 2021:** share of unclassifiable and of classified images rejected; target-class precision, recall and F1 with rejected target images counted as false negatives; CC on accepted images with the same RQ2 metrics on the main series (denominator: all images); decomposition of the remaining CC bias; *N. spumigena* detection.
+- **Decision rule:** the conclusion holds if, after filtering, unclassifiable particles remain the largest positive source of N-fixing CC bias for both backbones. It is weakened if they are no longer the largest source for either.
+- **Deferred (future work, to be discussed when writing):** plan B (thresholds calibrated on 2021 supplementary samples) and a dedicated timing benchmark.
