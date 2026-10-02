@@ -35,8 +35,10 @@ Training (2016 to 2019) and test (2021) data do not overlap in time, so the seas
 
 ## 3. Target Output
 
-- Type: conference paper.
-- Venue / deadline: Computer Vision Conference (CVC) 2027, Amsterdam, 15 to 16 April 2027. Springer LNNS, double-blind review, main text up to 18 pages, virtual presentation available. Submission deadline as listed at https://saiconference.com/CVC.
+- Type: open preprint with open code (revised 2026-10-02; the earlier CVC 2027 target was dropped).
+- Venues: arXiv and EarthArXiv (to be checked against both servers' policies before posting); code and results archived with a Zenodo DOI. Optional later: free peer review of the preprint (Peer Community In) or a journal.
+- Drafting: content written first in Word, then exported to PDF.
+- Consequence: the double-blind constraints of the CVC plan no longer apply; the preprint links to the repository.
 
 ## 4. Problem Framing
 

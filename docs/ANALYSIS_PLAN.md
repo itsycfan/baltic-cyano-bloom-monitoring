@@ -46,3 +46,14 @@ Added under the scope rule in `02_proposal.md` (condition 2). Written and commit
 - **Outputs on 2021:** share of unclassifiable and of classified images rejected; target-class precision, recall and F1 with rejected target images counted as false negatives; CC on accepted images with the same RQ2 metrics on the main series (denominator: all images); decomposition of the remaining CC bias; *N. spumigena* detection.
 - **Decision rule:** the conclusion holds if, after filtering, unclassifiable particles remain the largest positive source of N-fixing CC bias for both backbones. It is weakened if they are no longer the largest source for either.
 - **Deferred (future work, to be discussed when writing):** plan B (thresholds calibrated on 2021 supplementary samples) and a dedicated timing benchmark.
+
+## Addendum 2 (2026-10-02, before running): area-weighted abundance as a biomass proxy
+
+Added under the scope rule (condition 2): the RQ2 conclusions are stated for image counts, while marine monitoring reports biomass. If the open-set conclusion does not hold when particles are weighted by size, it must be qualified.
+
+- **Particle area:** for every image, foreground pixels are those whose grey value differs from the median border value by more than max(3 x 1.4826 x MAD of the border, 8 grey levels); holes are filled and specks below 5 pixels removed. Area = foreground pixel count. The segmentation rule is checked visually on training images only. Bounding-box area (width x height) is a sensitivity variant.
+- **Area-weighted relative abundance:** total area of a taxon's images / total area of all images in the sample (unclassifiable included), for truth and predictions alike. Pixel size is not needed because only shares are used.
+- **Configurations:** as in RQ2, CC and ACC are not recomputed with area; CC only, DINOv2 (primary) and ResNet-18, class weights none and balanced.
+- **Metrics:** the same curve metrics as RQ2, plus relative MAE (MAE divided by the mean true value of the series) so that count- and area-based errors can be compared; decomposition of the area-weighted CC bias.
+- **Decision rule:** the open-set conclusion holds in area terms if unclassifiable particles remain the largest positive source of area-weighted N-fixing CC bias for both backbones (class weight none). Otherwise it is reported as count-specific.
+- **Descriptive check (no decision):** area share of filamentous cyanobacteria (N-fixing total + Oscillatoriales) in July and August main-series samples, against the statement of Kraft et al. (2022) that filamentous cyanobacteria were about a third of total phytoplankton biomass during the 2021 bloom season.
