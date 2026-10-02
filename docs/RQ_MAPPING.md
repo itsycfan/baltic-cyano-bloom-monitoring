@@ -4,9 +4,9 @@
 
 | RQ | Status | Round / commit | Summary of latest result | Next action |
 |---|---|---|---|---|
-| RQ1 | TESTING (criteria met, awaiting review) | stage1, final stage 26 Sep | 2021 macro F1: all-four fusion 0.755, DINOv2 + BioCLIP 2 0.728, DINOv2 0.705, BioCLIP 2 0.705, CLIP 0.659, ResNet-18 0.623 (val to 2021 drop 0.19 to 0.26). T1: no fusion reaches +0.01 on val; primary DINOv2. T2: val temperature helps only when T > 1. | Yuchen: review, then CONCLUDE and tag rq1-concluded. |
-| RQ2 | TESTING (criteria met, awaiting review) | stage2 | N-fixing MAE (DINOv2): CC 0.42 / ACC 0.39 pp (none), 0.21 / 0.19 pp (balanced). Unclassifiable particles cause 70 to 85% of CC bias; ACC removes 1 to 17%; balanced weights 44 to 66%. Peak weeks always right; 2% onset 3 to 4 weeks early in 9 of 14 configurations. N. spumigena: 11 to 20 false-positive samples. | Yuchen: review, then CONCLUDE and tag rq2-concluded. |
-| RQ3 | TESTING (criteria met, awaiting review) | stage3 | Nominal 10% review on val becomes 36 to 58% on 2021. At nominal 10% (DINOv2, none): triage 0.071, confidence-only 0.124, random 0.230, ACC 0.385 pp. Nominal-1% triage beats ACC in 14 of 14 configurations. High-risk rule removes all false N. spumigena detections at 0.05 to 0.11% of images. | Yuchen: review, then CONCLUDE and tag rq3-concluded. |
+| RQ1 | CONCLUDE | tag `rq1-concluded` (2 Oct 2026) | 2021 macro F1: all-four fusion 0.755, DINOv2 + BioCLIP 2 0.728, DINOv2 0.705, BioCLIP 2 0.705, CLIP 0.659, ResNet-18 0.623 (val to 2021 drop 0.19 to 0.26). T1: no fusion reaches +0.01 on val; primary DINOv2. T2: val temperature helps only when T > 1. | None. |
+| RQ2 | CONCLUDE | tag `rq2-concluded` (2 Oct 2026) | N-fixing MAE (DINOv2): CC 0.42 / ACC 0.38 pp (none), 0.21 / 0.19 pp (balanced). Unclassifiable particles cause 70 to 85% of CC bias; ACC removes 1 to 17%; balanced weights 44 to 66%. Peak weeks always right; 2% onset 3 to 4 weeks early in 9 of 14 configurations. N. spumigena: 11 to 20 false-positive samples. Holds under class thresholds and area weighting. | None. |
+| RQ3 | CONCLUDE | tag `rq3-concluded` (2 Oct 2026) | Nominal 10% review on val becomes 36 to 58% on 2021. At nominal 10% (DINOv2, none): triage 0.071, confidence-only 0.124, random 0.230, ACC 0.385 pp. Nominal-1% triage beats ACC in 14 of 14 configurations. High-risk rule removes all false N. spumigena detections at 0.05 to 0.11% of images. | None. |
 
 ## Findings flagged for the paper
 
@@ -24,20 +24,19 @@ Observations that should appear in the paper, with the stage that produced them.
 *For each RQ that reaches CONCLUDE, record the winning approach, the evidence, and any change to the Technical Framework.*
 
 ### RQ1
-- **Concluded:** _(date / commit)_
-- **Result:**
-- **Framework impact:**
+- **Concluded:** 2026-10-02, tag `rq1-concluded`
+- **Result:** Frozen features with logistic regression lose 0.19 to 0.26 macro F1 from the 2022 validation split to 2021. DINOv2 is the best single backbone on validation (0.945) and ties with BioCLIP 2 on 2021 (0.705). No fusion meets the pre-registered +0.01 rule, so DINOv2 is the primary feature set; the all-four fusion is nevertheless best on 2021 (0.755), so validation from the training years does not identify the most shift-robust model. Validation temperature improves 2021 calibration only when T > 1. The closed-set classifier assigns most unclassifiable particles to small-cell classes and several hundred to the targets.
+- **Framework impact:** Representation: DINOv2, no fusion. Decision layer unchanged (multinomial logistic regression, C from validation, temperature scaling); both class weightings kept, since RQ2 shows balanced weights halve abundance error.
 
 ### RQ2
-- **Concluded:** _(date / commit)_
-- **Result:**
-- **Framework impact:**
+- **Concluded:** 2026-10-02, tag `rq2-concluded`
+- **Result:** Peak weeks are always correct, but CC over-estimates the off-season baseline; unclassifiable particles cause 70 to 85% of the bias, ACC removes only 1 to 17%, and the 2% onset is signalled 3 to 4 weeks early in 9 of 14 configurations. Image-level accuracy does not rank models by abundance error. Balanced weights reduce error by 44 to 66%. N. spumigena is evaluated as detection (11 to 20 false-positive samples). The open-set conclusion holds under class-specific thresholds and under area weighting.
+- **Framework impact:** Evaluation moves from image accuracy to curve error, onset and peak timing, with an error decomposition. ACC is kept only as a reference; handling unknown particles (review now, open-set methods in future work) is the main lever.
 
 ### RQ3
-- **Concluded:** _(date / commit)_
-- **Result:**
-- **Framework impact:**
-
+- **Concluded:** 2026-10-02, tag `rq3-concluded`
+- **Result:** Review rates set on validation inflate to 2 to 10%, 22 to 41% and 36 to 58% of 2021 images for nominal 1, 5 and 10%. At equal workload, triage beats random review in all 42 cases and confidence-only review in most; reviewing 2 to 10% of images beats ACC in all 14 configurations; evidence signals catch confident errors (Oscillatoriales). The high-risk rule removes every false N. spumigena detection at 0.05 to 0.11% of images but cannot recover missed ones.
+- **Framework impact:** Policy layer kept as designed (three scores plus high-risk rule, shared quantile level); the distance signal is kept (post hoc check: removing it raises workload). Review budgets must be calibrated on deployment-period data (future work), and a two-stage alert workflow is proposed.
 ---
 
 When every RQ is `CONCLUDE` or `CARRIED FORWARD`, move to Confirm: update the Roadmap and Framework in `02_proposal.md` to vFinal, log the change in `CHANGELOG.md`, and tag `vFinal`.
