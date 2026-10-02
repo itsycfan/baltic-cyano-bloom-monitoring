@@ -30,3 +30,6 @@ references/
 
 # Generated previews
 paper/*_preview.pdf
+
+# Manuscript drafts (kept local until the preprint is posted)
+paper/

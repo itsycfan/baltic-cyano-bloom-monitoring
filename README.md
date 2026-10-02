@@ -14,5 +14,4 @@ Built on the [template-rq-driven-research](https://github.com/itsycfan/template-
 | `src/` | Shared code: data parsing, features, classifier, quantification, kNN evidence, plotting |
 | `experiments/` | One folder per stage (Stage 0, RQ1, RQ2, RQ3) with scripts and `outputs/`; `paper_figures/` holds the numbered figures for the manuscript |
 | `docs/` | Project definition, proposal, pre-registered analysis plan, logs, report, verified references |
-| `paper/` | Manuscript (`.docx`) and the generator that builds it from text and result files (`paper/generator/`) |
-| `data/`, `references/`, `features/`, `checkpoints/` | Local only (git-ignored): raw images, third-party papers, extracted features, model outputs |
+| `data/`, `references/`, `features/`, `checkpoints/`, `paper/` | Local only (git-ignored): raw images, third-party papers, extracted features, model outputs, manuscript drafts |
