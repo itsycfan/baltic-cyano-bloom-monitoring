@@ -1,6 +1,6 @@
 # Roadmap / Framework Changelog
 
-> One entry per meaningful revision of the Research Roadmap or Technical Framework in `02_proposal.md`. The point is to record *why* it changed, which a renamed file or an "(old version)" copy in `archive/` never does. Pair each entry with a git tag.
+> One entry per meaningful revision of the Research Roadmap or Technical Framework in `02_proposal.md`. The point is to record *why* it changed, which a renamed file or an "(old version)" copy never does. Pair each entry with a git tag.
 
 ## v0-proposal — YYYY-MM-DD
 

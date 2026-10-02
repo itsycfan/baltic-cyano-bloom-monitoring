@@ -14,8 +14,7 @@ This repository follows `template-rq-driven-research`'s SOP-1 / SOP-2 (see the r
 ## Never
 
 - Don't invent a new top-level folder without updating the structure table in `README.md`.
-- Don't commit anything under `data/` (see `.gitignore`) — only `demo_data/` is tracked.
-- Don't compile or restructure the Word report / PPT in `reports/` until the Roadmap/Framework has actually been confirmed (`docs/CHANGELOG.md` has an entry) — it is a snapshot of a concluded state, not a running draft.
+- Don't commit anything under `data/` or `references/` (see `.gitignore`): raw data and third-party papers stay local.
 
 ## When starting a brand-new project from this template
 
