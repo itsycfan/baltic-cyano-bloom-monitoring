@@ -128,3 +128,10 @@ Problem / decision: Apply the pre-registered T1 rule once all four backbones and
 Root cause / options considered: Best single by val macro F1 (class weight none): DINOv2 0.945. Top-2 singles: DINOv2 and BioCLIP 2 (0.931). Fusions on val: DINOv2 + BioCLIP 2 0.950 (+0.005), all four 0.944 (-0.001), ResNet-18 + DINOv2 0.947 (+0.002, interim candidate).
 Resolution: No fusion reaches +0.01; DINOv2 is the primary feature set (`t1_decision.json`). The all-four fusion is best on 2021 (0.755 vs 0.705) and on abundance, which is reported as a finding (validation cannot select for shift robustness) and not used to change the choice.
 Rejected alternatives (if a decision, not a bug) and why: Adopting the all-four fusion after seeing 2021 results (selection on the test set).
+
+## 2026-10-02 — Paper framing: retrospective evaluation in a near-real-time-capable setting
+RQ: RQ1 to RQ3 (framing)
+Problem / decision: The onset metric implies early warning. Is the study a real-time system?
+Root cause / options considered: Kraft et al. (2022, Front. Mar. Sci. 9:867695) describe the Utö pipeline: a 5 mL sample about every 20 minutes, transfer over the station network and optical fibre to FMI and CSC Allas, hourly classification, about two hours from capture to classified output, online publication of cyanobacteria biomass in summer 2021. Our study uses weekly expert-verified samples and evaluates afterwards.
+Resolution (Yuchen): frame the paper as a retrospective evaluation in a near-real-time-capable setting. Added to the limitations: one sample per week; review latency not modelled. Added to future work: two-stage operation (automatic early warning, expert confirmation). Also noted that Kraft et al. filter unclassifiable images with class-specific probability thresholds, which our closed-set baseline lacks; it must be cited and discussed as related work.
+Rejected alternatives (if a decision, not a bug) and why: Presenting the work as a real-time warning system (not what was evaluated).

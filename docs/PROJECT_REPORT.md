@@ -2,6 +2,10 @@
 
 Status: **complete for all pre-registered analyses, 2026-09-28.** Four frozen backbones, three fusions, two class weightings, RQ1 to RQ3. Every number below comes from a file in the repository (paths given) and was checked against it. Local commits only; nothing has been pushed.
 
+## Framing
+
+This is **a retrospective evaluation in a near-real-time-capable setting**. At Utö the IFCB processes a 5 mL sample about every 20 minutes; images flow from the station network over optical fibre to an FMI file server and on to CSC's Allas cloud storage, are classified hourly, and reach classified output about two hours after capture; in summer 2021 cyanobacteria biomass was published online as a demonstration (Kraft et al., 2022). This study does not build or operate that system. It evaluates, after the fact and on expert-verified weekly samples, how good the automatic observation layer of such a system is and how much expert review it needs. The onset rule uses only past and current samples, so it could run in real time; the evaluation itself is retrospective.
+
 ## 1. Key messages
 
 1. **Temporal shift costs a fifth to a quarter of macro F1.** From the 2022 validation split to the 2021 Utö samples, macro F1 drops by 0.19 to 0.26 for every feature set.
@@ -114,17 +118,24 @@ Source: `experiments/stage3_rq3_selective_review/outputs/<features>__<class weig
 - **Deviations from the proposal wording:** T1 decided on val only (the proposal also mentions 2021 images); distance signal kept in T3 despite val AUROC below 0.6 (pre-registered reason); class-balanced weights reduce rather than inflate abundance error.
 - **Post hoc analyses (marked as such):** CC error decomposition; size ablation; policy without the distance signal.
 - **Problems during the run:** a self-matching `pgrep` in the job queue idled the GPU for about 7 hours; OpenAI CLIP needed `force_quick_gelu=True` (fixed before extraction); memory pressure on the 8 GB machine slowed BioCLIP 2 to about 6 img/s. All in `DEV_LOG.md`.
-- **Limitations:** random validation split (no sample IDs in training data); simulated review is a perfect taxonomist; 2021 labels were corrected from CNN predictions; image counts, not biomass; one station, one year; *N. spumigena* conclusions rest on 5 main-series images; single seed for the split and for kNN.
+- **Limitations:** random validation split (no sample IDs in training data); **temporal resolution of one sample per week**, whereas the instrument samples about every 20 minutes, so single noisy samples (such as the 92% unclassifiable sample of 1 June) weigh more than they would in an operational series; **review latency is not modelled**: reviewed images receive their true label instantly, whereas in operation automatic results arrive about two hours after sampling and expert checks later still; simulated review is a perfect taxonomist; 2021 labels were corrected from CNN predictions; image counts, not biomass; one station, one year; *N. spumigena* conclusions rest on 5 main-series images; single seed for the split and for kNN.
 
-## 9. Status of RQs
+## 9. Future work
+
+- **Two-stage operation: automatic early warning, expert confirmation.** Issue a provisional alert from automatic counts as soon as a threshold is crossed, then confirm or withdraw it after review of the triaged images. This needs a model of review latency and of the cost of provisional false alarms.
+- **Open-set handling.** Kraft et al. (2022) already filter images outside the known classes with class-specific probability thresholds set on validation data that includes unclassifiable images. Our closed-set baseline does not; comparing against such thresholds, and against an explicit reject option based on kNN evidence, is the most direct way to address the dominant error source found here.
+- **Deployment-period calibration of review thresholds**, for example on the first weeks of a season, to control the workload inflation found in RQ3.
+- **Higher temporal resolution** with labelled sub-daily samples, to test whether false early onsets average out.
+
+## 10. Status of RQs
 
 All three RQs meet the "concluded when" criteria in `02_proposal.md`. They stay TESTING in `RQ_MAPPING.md` until Yuchen reviews the results; then CONCLUDE and tags `rq1-concluded` to `rq3-concluded`.
 
-## 10. Decisions needed from Yuchen
+## 11. Decisions needed from Yuchen
 
 1. **Review and push.** Local commits since `v0.1-stage0` are not pushed.
 2. **Mark RQ1 to RQ3 as CONCLUDE and tag them**, or request further analyses first.
 3. **Primary configuration for the paper.** The pre-registered primary is DINOv2 with class weight none. The balanced variant has half the abundance error and correct onsets. Options: keep none as primary and report balanced as the key RQ2 result (recommended, consistent with pre-registration), or present both as primary.
 4. **The all-four fusion.** It is best on 2021 but was rejected by the val-only rule. Recommended: keep DINOv2 as primary and report the fusion's 2021 advantage as the "validation cannot select for shift" finding; do not switch post hoc.
 5. **Proposal deviations** in section 8 (T1 on val only; distance exception) need your approval before they go into `02_proposal.md` vFinal and `CHANGELOG.md`.
-6. **Scope for the remaining days.** Candidates, all outside the current plan: (a) calibrating review thresholds on the first weeks of 2021 and testing on the rest (addresses the workload inflation); (b) an explicit reject option using the kNN distance; (c) BioCLIP 2 zero-shot ablation (optional in the proposal). Recommended: (a) as future work in the paper; skip (b) and (c) unless time remains after writing.
+6. **Scope for the remaining days.** Candidates, all outside the current plan: (a) calibrating review thresholds on the first weeks of 2021 and testing on the rest (addresses the workload inflation); (b) an open-set baseline: class-specific probability thresholds as in Kraft et al. (2022), or a kNN reject option; (c) BioCLIP 2 zero-shot ablation (optional in the proposal). Recommended: (a) as future work; (b) at least discussed in the paper, and run if time allows, because reviewers will compare against the dataset authors' own thresholding; skip (c).
