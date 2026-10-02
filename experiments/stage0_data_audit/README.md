@@ -26,6 +26,17 @@ The 2021 test set mixes regular weekly samples (Tuesday around 12:00) with suppl
 
 > **Finding for the paper:** *Nodularia spumigena*, the most toxic target, has only 5 images in the 47 main-series samples (at most 2 per sample, peak 0.03%) and 57 in supplementary samples. It cannot be monitored as an abundance curve and is evaluated as a detection task; this supports routing it to expert review via the high-risk rule.
 
+## Reading the ground-truth bloom curve (`bloom_curve_2021_ground_truth.png`)
+
+Each point is one weekly sample: the share of all images in that sample (unclassifiable included) that belong to a taxon. Lines join the 47 main-series samples; hollow circles are supplementary samples, shown but not used for metrics. The dotted vertical line marks the excluded incomplete sample (20 July).
+
+- **Upper panel, bloom-forming filamentous cyanobacteria:** N-fixing total (thick line; *Aphanizomenon* + *Dolichospermum* straight and coiled + *N. spumigena*), *Aphanizomenon flosaquae*, *Dolichospermum* total, and Oscillatoriales (dashed; filamentous, not a primary bloom taxon, reported separately).
+- **Lower panel, low-abundance high-risk taxa:** *N. spumigena* and *Dinophysis acuminata*, on a y-axis about 30 times smaller.
+- **Seasonal sequence:** *Dolichospermum* first (peak 5.1% on 29 June), then *Aphanizomenon* (3.7% on 6 July, maximum 8.6% on 27 July; N-fixing total 9.3%), then Oscillatoriales (12.9% on 17 August). Winter values of 1 to 3% are a small-sample effect, not a bloom.
+- **Why 9.3% is a bloom:** values count images, not biomass. A long filament counts once, and more than half of each sample are small unclassifiable particles.
+
+**External consistency with Kraft et al. (2022, section 3.2).** Their near-real-time biomass series from the same station in summer 2021 (one sample about every 20 minutes) describes the same sequence: *Dolichospermum*/*Anabaenopsis* bloomed in late June (peak 2 July) and dropped within days; *Aphanizomenon* followed (peak 5 July) and formed a third peak at the end of July; *N. spumigena* appeared only sporadically. Two independent measures (biomass at 20-minute resolution, image counts in weekly expert-verified samples) give the same seasonal pattern, which supports the ground-truth curve used in RQ2 and RQ3. They also report a secondary peak on 19 and 20 July; our week-29 sample (20 July) is incomplete and excluded, so the weekly series misses that peak. This shows the practical cost of weekly resolution: short peaks lasting a few days can fall between samples.
+
 ## Outputs (`outputs/`)
 
 | File | Content |

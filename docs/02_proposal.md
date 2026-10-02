@@ -25,7 +25,9 @@ Everything else (newer classifiers, other open-set methods, extra benchmarks) go
 
 ### Target classes
 
-To be confirmed against Kraft et al. (2021, 2022). Training image counts in brackets.
+Confirmed against Kraft et al. (2022), who published near-real-time biomass of the same three main bloom-forming cyanobacteria taxa of the Baltic Sea (*Dolichospermum*/*Anabaenopsis*, *Aphanizomenon flosaquae*, *Nodularia spumigena*) from Utö in summer 2021 (their section 3.2). Training image counts in brackets.
+
+**Role of the other classes.** The classifier is trained on all 50 classes, and only the targets below are evaluated as curves. The remaining classes (diatoms, dinoflagellates, cryptophytes, green algae, ciliates and others) are kept because they give non-target particles somewhere to go: without them, every non-target image would be forced into a target class and target abundance would be inflated. Their errors are still analysed where they explain target errors (for example, unclassifiable particles absorbed into *Pyramimonas*).
 
 - **Primary targets (nitrogen-fixing filamentous bloom taxa):** *Aphanizomenon flosaquae* (6,989); *Dolichospermum* sp./*Anabaenopsis* sp. (12,280) and its coiled form (2,504); *Nodularia spumigena* (169).
 - **Reported separately:** Oscillatoriales (4,440), filamentous but not a primary bloom taxon.

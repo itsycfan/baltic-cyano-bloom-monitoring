@@ -67,7 +67,7 @@ Quantify the error of cyanobacteria relative abundance curves produced by frozen
 
 ### 4.5 Open Questions
 
-- Final set of target classes, to be confirmed against Kraft et al. (2021, 2022).
+- ~~Final set of target classes~~ Resolved: the three main bloom-forming taxa named in Kraft et al. (2022) plus Oscillatoriales (reported separately) and *Dinophysis acuminata* (high risk); see `02_proposal.md`, Target classes.
 - ~~Definition of bloom onset~~ Resolved in Stage 0: fixed thresholds of 1%, 2% and 5% within June to September (see `02_proposal.md`).
 - ~~Whether the additional seasonal samples allow a clean series of one sample per week~~ Resolved in Stage 0: 47 main-series samples, 5 weeks without a sample.
 - Whether feature fusion improves transfer, and whether classifier confidence remains calibrated under the temporal shift.

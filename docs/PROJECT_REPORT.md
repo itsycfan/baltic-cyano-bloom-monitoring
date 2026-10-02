@@ -25,6 +25,7 @@ Source: `experiments/stage0_data_audit/`.
 - Test (Utö 2021): 151,235 images, 57,207 classified in 48 classes (no Beads, no *Prorocentrum cordatum*) and 94,028 unclassifiable; 59 samples. No byte-identical images between train and test, no corrupt files.
 - **Main series:** regular weekly samples (Tuesday around 12:00) are separated from supplementary samples chosen to enrich rare classes. One complete sample per ISO week gives 47 main-series samples; 11 supplementary samples are used only in a sensitivity analysis; one sample (week 29, 50 images of one class, particle coverage 0.6%) is incomplete and excluded.
 - Ground truth (main series): N-fixing filamentous total peaks at 9.3% on 27 July; *Dolichospermum* 5.1% on 29 June; Oscillatoriales 12.9% on 17 August. *N. spumigena*: 5 images in the main series, 57 in supplementary samples.
+- **External consistency:** the seasonal sequence matches the near-real-time biomass series of Kraft et al. (2022, section 3.2) from the same station and summer: *Dolichospermum* bloomed first (their peak 2 July, ours 29 June), *Aphanizomenon* followed (5 July vs 6 July) with a further peak at the end of July (ours 27 July), and *N. spumigena* stayed sporadic. Their secondary peak of 19 and 20 July falls on our excluded week-29 sample, so the weekly series misses it.
 - Onset: first main-series sample between 1 June and 30 September reaching 1%, 2% or 5% of the N-fixing total (8 June, 29 June, 29 June). The window excludes a 1 to 3% winter background caused by small winter samples.
 
 Figures: `bloom_curve_2021_ground_truth.png`, `sample_coverage_2021.png`, `class_counts_train_vs_test.png`.
@@ -113,6 +114,7 @@ Source: `experiments/stage3_rq3_selective_review/outputs/<features>__<class weig
 - Accuracy rankings do not transfer to abundance rankings (CLIP vs ResNet-18; BioCLIP 2 vs DINOv2), and in-distribution validation does not identify the most shift-robust model (all-four fusion).
 - Val-calibrated review budgets inflate by a factor of about 2 to 10 under temporal shift; operational review needs calibration data from the deployment period.
 - Evidence-based triage adds value beyond confidence where errors are confident (Oscillatoriales).
+- The weekly expert-verified ground truth reproduces the 2021 bloom sequence reported independently from high-frequency biomass data (Kraft et al., 2022), which supports its use as reference; it also misses a short secondary peak, illustrating the cost of weekly resolution.
 
 ## 8. Deviations, problems and limitations
 
